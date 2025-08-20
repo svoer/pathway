@@ -1,4 +1,4 @@
-# 🤖 Pathway Editor – Mermaid AI Playground
+# 🤖 Pathway From idea to diagram in seconds
 
 Bienvenue dans **Pathway Editor**, un outil qui transforme en temps réel tes idées en **diagrammes intelligents** ✨  
 Ici, tu n’as plus besoin d’écrire toi-même du code Mermaid : tu demandes à l’**IA** ce que tu veux (un organigramme, un Gantt, un mindmap, etc.), et le graphique est **généré instantanément** pour toi. 🚀
