@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="fr" x-data="app()" x-init="init()">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Enovacom Pathway</title>
+
+  <!-- Libs (en prod: Tailwind via CLI/PostCSS) -->
+  <script src="https://unpkg.com/alpinejs@3.13.0/dist/cdn.min.js" defer></script>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+
+  <!-- Webfonts -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?
+family=Inter:wght@400;600;800&
+family=Work+Sans:wght@400;600;700&
+family=Manrope:wght@400;600;700&
+family=Montserrat:wght@500;700&
+family=JetBrains+Mono:wght@600;700&display=swap" />
+
+  <style>
+    [x-cloak]{display:none!important;}
+    :root{
+      /* Enovacom (sert aussi quand thème = Enovacom pour l'UI) */
+      --primary:#0C4A45; --primary-light:#0f5650; --primary-dark:#083832;
+      --accent:#22c55e; --accent-light:#4ade80;
+      --surface:#ffffff; --surface-elevated:#fafafa; --surface-border:#e5e7eb;
+      --text:#111827; --text-2:#6b7280; --muted:#9ca3af;
+      --r-sm:10px; --r-md:14px; --r-lg:18px;
+      --shadow-s:0 1px 3px 0 rgba(0,0,0,.08),0 1px 2px 0 rgba(0,0,0,.04);
+      --shadow-m:0 5px 10px rgba(0,0,0,.06);
+      --shadow-l:0 12px 24px rgba(0,0,0,.08);
+    }
+    *{font-family:'Inter',system-ui,-apple-system,Segoe UI,Roboto,sans-serif}
+    body{background:linear-gradient(180deg,#fafafa 0%,#f3f4f6 100%);color:var(--text);-webkit-font-smoothing:antialiased}
+    .modern-header{background:var(--surface);border-bottom:1px solid var(--surface-border);backdrop-filter:blur(10px);box-shadow:var(--shadow-s)}
+    .brand-logo{font-weight:800;font-size:1.5rem;color:var(--primary);letter-spacing:-.02em}
+    .brand-tagline{font-weight:500;font-size:.9rem;color:var(--text-2);margin-left:.5rem;padding-left:.5rem;border-left:2px solid var(--surface-border)}
+
+    .neo-card{background:var(--surface);border:1px solid var(--surface-border);border-radius:var(--r-lg);box-shadow:var(--shadow-s);transition:transform .15s ease}
+    .neo-card:hover{transform:translateY(-1px)}
+    .neo-card-header{padding:1.1rem 1.1rem 0 1.1rem;border-bottom:1px solid var(--surface-border);margin-bottom:1.1rem}
+    .section-title{font-weight:600;font-size:1.1rem}
+
+    .neo-input{width:100%;padding:.8rem 1rem;border:1.5px solid var(--surface-border);border-radius:12px;background:var(--surface);font-weight:500}
+    .neo-input:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(12,74,69,.12);outline:0}
+    .neo-select{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .75rem center;background-size:1rem;padding-right:2.5rem}
+
+    .neo-btn{display:inline-flex;align-items:center;justify-content:center;height:44px;padding:0 1rem;border-radius:12px;border:1px solid var(--surface-border);background:var(--surface-elevated);cursor:pointer}
+    .neo-btn:hover{background:#fff;box-shadow:var(--shadow-s)}
+    .neo-btn-primary{background:var(--primary);color:#fff;border:none}
+    .neo-btn-primary:hover{background:var(--primary-light);box-shadow:var(--shadow-m)}
+    .neo-btn-icon{width:44px;padding:0}
+    .is-recording{background:rgba(242,101,80,.12);border-color:#f26950}
+
+    .preview-container{background:var(--surface);border:1px solid var(--surface-border);border-radius:14px;min-height:400px;overflow:auto;padding:1rem}
+    #preview svg{max-width:100%!important;height:auto!important}
+
+    .neo-toast{position:fixed;top:1rem;right:1rem;z-index:100;padding:.85rem 1.1rem;border-radius:12px;color:#fff;font-weight:700;box-shadow:var(--shadow-l);transform:translateX(120%);transition:transform .25s ease}
+    .neo-toast.success{background:linear-gradient(135deg,var(--accent),#16a34a)}
+    .neo-toast.error{background:linear-gradient(135deg,#ef4444,#dc2626)}
+    .neo-toast.show{transform:translateX(0)}
+
+    /* Tuiles export (claires, sans sous-titre) */
+    .export-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.75rem}
+    .export-tile{
+      display:flex;align-items:center;justify-content:center;
+      height:72px;border:1px solid var(--surface-border);border-radius:16px;
+      background:var(--surface-elevated);box-shadow:var(--shadow-s);
+      font-family:'JetBrains Mono',monospace;font-weight:800;letter-spacing:.08em;
+      font-size:1.15rem; text-transform:uppercase;
+      transition:transform .12s ease, box-shadow .12s ease, background .12s ease;
+    }
+    .export-tile:hover{transform:translateY(-1px);box-shadow:var(--shadow-m);background:#fff}
+
+    @media (max-width:1280px){
+      .container-main{grid-template-columns:1fr}
+      .sidebar{order:2}
+      .main-content{order:1}
+    }
+  </style>
+</head>
+<body class="min-h-screen">
+  <div id="toast" class="neo-toast"></div>
+
+  <!-- Header -->
+  <header class="modern-header sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-6 py-4">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center">
+          <span class="brand-logo">enovacom pathway</span>
+          <span class="brand-tagline">From idea to diagram in seconds</span>
+        </div>
+        <div class="flex items-center gap-3">
+          <button @click="generateDemo()" class="neo-btn" title="Charger une démo">Démo</button>
+          <button @click="showSettings = true" class="neo-btn" title="Paramètres API">Paramètres</button>
+          <button @click="showHelp = true" class="neo-btn" title="Aide Mermaid">Aide</button>
+        </div>
+      </div>
+
+      <!-- Choix du modèle -->
+      <div class="flex items-center gap-6 mt-4 pt-4 border-t border-gray-200">
+        <div class="flex items-center gap-3 flex-1">
+          <label class="font-semibold">Modèle</label>
+          <div x-show="loadingModels" class="text-gray-600">Chargement…</div>
+          <select x-show="!loadingModels && models && models.length" x-model="selectedModel" class="neo-input neo-select flex-1 max-w-md" title="Modèle Mistral">
+            <template x-for="(model, index) in models" :key="index">
+              <option :value="model" x-text="model"></option>
+            </template>
+          </select>
+          <div x-show="!loadingModels && (!models || !models.length)" class="text-sm text-red-600">Aucun modèle</div>
+        </div>
+        <button x-show="!loadingModels" @click="loadModels()" class="neo-btn neo-btn-icon" title="Recharger les modèles">
+          <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M23 4v6h-6"/><path d="M20.49 15A9 9 0 1 1 6 6.26"/></svg>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main -->
+  <main class="max-w-7xl mx-auto px-6 py-8">
+    <div class="container-main grid grid-cols-1 xl:grid-cols-4 gap-8">
+      <!-- Sidebar -->
+      <aside class="sidebar xl:col-span-1">
+        <div class="neo-card">
+          <div class="neo-card-header"><h2 class="section-title">Prompt IA</h2></div>
+          <div class="px-6 pb-6">
+            <textarea x-model="prompt" :class="['neo-input resize-none h-32 mb-4', isRecording ? 'ring-2 ring-rose-500' : '']" :placeholder="(isRecording ? 'Parlez… la dictée est en cours 🎤' : 'Décrivez le diagramme que vous voulez créer...')"></textarea>
+            <div class="flex gap-2">
+              <button @click="generate()" :disabled="loading || !prompt.trim()" class="neo-btn neo-btn-primary w-full" title="Générer le diagramme">
+                <span x-show="!loading">Générer</span><span x-show="loading">Génération…</span>
+              </button>
+              <button @click="toggleDictation()" class="neo-btn neo-btn-icon" :class="{'is-recording': isRecording}" :title="isRecording ? 'Arrêter la dictée' : 'Dicter'}" aria-label="Dictée">
+                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 14a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v5a3 3 0 0 0 3 3Zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 14 0h-2Zm-5 7a7 7 0 0 1-7-7H3a9 9 0 0 0 18 0h-2a7 7 0 0 1-7 7Zm-1 2h2v2h-2v-2Z"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Content -->
+      <div class="main-content xl:col-span-3 space-y-8">
+        <!-- Éditeur -->
+        <section class="neo-card">
+          <div class="neo-card-header"><h2 class="section-title">Éditeur de code Mermaid</h2></div>
+          <div class="px-6 pb-6">
+            <textarea x-model="mermaidCode" @input="debouncedRender()" class="neo-input font-mono text-sm resize-vertical h-48 mb-4" placeholder="Tapez votre code Mermaid ici..."></textarea>
+            <div class="text-sm">
+              <span x-show="lastError" class="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-red-50 text-red-700 border border-red-200">❌ <span x-text="lastError"></span></span>
+              <span x-show="!lastError && mermaidCode" class="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200">✅ Syntaxe OK</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Toolbar -->
+        <section class="bg-white/60 border border-gray-200 rounded-2xl p-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-6">
+            <!-- Thème -->
+            <div>
+              <label class="font-semibold block mb-2">Thème</label>
+              <select x-model="theme" @change="applyTheme(); renderMermaid()" class="neo-input neo-select">
+                <template x-for="t in availableThemes" :key="t.id"><option :value="t.id" x-text="t.name"></option></template>
+              </select>
+            </div>
+
+            <!-- Couleur -->
+            <div>
+              <label class="font-semibold block mb-2">Couleur</label>
+              <div class="flex items-center gap-2">
+                <input type="color" x-model="primaryColor" @input="updateColors(); renderMermaid()" class="w-12 h-10 border border-gray-300 rounded" title="Couleur des lignes"/>
+                <span class="text-xs text-gray-500 font-mono" x-text="primaryColor"></span>
+              </div>
+            </div>
+
+            <!-- Police -->
+            <div>
+              <label class="font-semibold block mb-2">Police</label>
+              <select x-model="fontFamily" @change="onFontChange()" class="neo-input neo-select">
+                <option value="Inter, sans-serif">Inter</option>
+                <option value="'Work Sans', sans-serif">Work Sans</option>
+                <option value="Manrope, sans-serif">Manrope</option>
+                <option value="Montserrat, sans-serif">Montserrat</option>
+                <option value="'JetBrains Mono', monospace">JetBrains Mono (mono)</option>
+              </select>
+            </div>
+
+            <!-- Exports -->
+            <div>
+              <label class="font-semibold block mb-2">Export</label>
+              <div class="export-grid">
+                <button @click="exportSvg()" class="export-tile" aria-label="Exporter en SVG" title="Exporter en SVG">SVG</button>
+                <button @click="exportPng()" class="export-tile" aria-label="Exporter en PNG (transparent)" title="Exporter en PNG">PNG</button>
+                <button @click="exportJpeg()" class="export-tile" aria-label="Exporter en JPEG" title="Exporter en JPEG">JPEG</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Preview -->
+        <section class="neo-card">
+          <div class="neo-card-header"><h2 class="section-title">Aperçu</h2></div>
+          <div class="px-6 pb-6">
+            <div class="preview-container"><div id="preview" class="w-full min-h-[400px]"></div></div>
+          </div>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <!-- Paramètres -->
+  <div x-show="showSettings" x-cloak class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" @click.self="showSettings = false">
+    <div class="bg-white border border-gray-200 rounded-2xl shadow-2xl max-w-md w-full p-8">
+      <div class="flex justify-between items-center mb-6">
+        <h3 class="text-xl font-bold">Paramètres Mistral</h3>
+        <button @click="showSettings = false" class="neo-btn neo-btn-icon" title="Fermer"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+      </div>
+      <form class="space-y-6" @submit.prevent>
+        <div><label class="font-semibold block mb-2">Base URL</label><input x-model="settingsForm.base_url" type="url" class="neo-input" placeholder="https://api.mistral.ai" autocomplete="url"/></div>
+        <div><label class="font-semibold block mb-2">API Key</label><input x-model="settingsForm.api_key" type="password" class="neo-input" placeholder="sk-..." autocomplete="new-password"/></div>
+        <div class="flex gap-3 pt-4">
+          <button @click="testMistralConnection()" class="neo-btn w-full">Tester</button>
+          <button @click="saveMistralSettings()" class="neo-btn neo-btn-primary w-full">Sauvegarder</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Aide -->
+  <div x-show="showHelp" x-cloak class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" @click.self="showHelp = false">
+    <div class="bg-white border border-gray-200 rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+      <div class="sticky top-0 bg-white border-b p-6 rounded-t-2xl flex justify-between items-center">
+        <h3 class="text-2xl font-bold">Aide Mermaid – Raccourci</h3>
+        <button @click="showHelp = false" class="neo-btn neo-btn-icon" title="Fermer"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+      </div>
+      <div class="p-8 space-y-10 text-sm text-gray-800">
+  <!-- Intro -->
+  <section class="space-y-3">
+    <h3 class="text-xl font-bold">Guide rapide Mermaid</h3>
+    <p>
+      Mermaid transforme du texte en diagrammes. Écris ton code dans l’éditeur, l’aperçu se met à jour.
+      Tu peux ensuite exporter en <strong>SVG</strong>, <strong>PNG</strong> ou <strong>JPEG</strong>.
+    </p>
+    <ul class="list-disc pl-5 grid grid-cols-1 md:grid-cols-2 gap-1">
+      <li><strong>Directions</strong> : <code>flowchart <span class="font-mono">TB</span>|<span class="font-mono">LR</span>|<span class="font-mono">RL</span>|<span class="font-mono">BT</span></code> (Top-Bottom, Left-Right, etc.).</li>
+      <li><strong>Rendu</strong> : change le <em>Thème</em>, la <em>Couleur</em> et la <em>Police</em> pour un style cohérent.</li>
+    </ul>
+  </section>
+
+  <!-- Flowchart -->
+  <section class="space-y-3">
+    <h4 class="text-lg font-semibold">1) Flowchart (processus)</h4>
+    <p>Boîtes, décisions, étiquettes et styles de flèches.</p>
+    <pre class="bg-gray-50 border border-gray-200 rounded-lg p-4 overflow-x-auto text-xs leading-5"><code>flowchart LR
+  %% formes
+  A[Étape] --> B{Décision ?}
+  B -- Oui --> C((OK))
+  B -. Non .-> D[[Sous-procédé]]
+  C ==> E[Fin]
+
+  %% styles
+  style C fill:#E8F5F4,stroke:#0C4A45,stroke-width:2px,color:#0e1f1c
+  classDef accent fill:#FEE2E2,stroke:#DC2626,color:#991B1B,stroke-width:2px
+  class D accent;
+</code></pre>
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+      <div><span class="font-mono bg-gray-100 px-2 py-1 rounded">[Texte]</span> Rectangle</div>
+      <div><span class="font-mono bg-gray-100 px-2 py-1 rounded">(Texte)</span> Coins arrondis</div>
+      <div><span class="font-mono bg-gray-100 px-2 py-1 rounded">((Texte))</span> Cercle</div>
+      <div><span class="font-mono bg-gray-100 px-2 py-1 rounded">{Texte}</span> Losange (décision)</div>
+      <div><span class="font-mono bg-gray-100 px-2 py-1 rounded">[[Texte]]</span> Sous-routine</div>
+      <div><span class="font-mono bg-gray-100 px-2 py-1 rounded">[(Texte)]</span> Base de données</div>
+    </div>
+    <div>
+      <p class="mb-2 font-medium">Flèches & étiquettes (cheatsheet) :</p>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
+        <div><span class="font-mono bg-gray-100 px-2 py-1 rounded">A --&gt; B</span> flèche pleine</div>
+        <div><span class="font-mono bg-gray-100 px-2 py-1 rounded">A -.-> B</span> pointillée</div>
+        <div><span class="font-mono bg-gray-100 px-2 py-1 rounded">A ==&gt; B</span> épaisse</div>
+        <div><span class="font-mono bg-gray-100 px-2 py-1 rounded">A -- Texte --&gt; B</span> label au milieu</div>
+        <div><span class="font-mono bg-gray-100 px-2 py-1 rounded">A --&gt;|Oui| B</span> label près de la flèche</div>
+        <div><span class="font-mono bg-gray-100 px-2 py-1 rounded">A --- B</span> simple trait (sans pointe)</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Sequence -->
+  <section class="space-y-3">
+    <h4 class="text-lg font-semibold">2) Sequence (échanges)</h4>
+    <p>Participants, messages, activations, conditions et notes.</p>
+    <pre class="bg-gray-50 border border-gray-200 rounded-lg p-4 overflow-x-auto text-xs leading-5"><code>sequenceDiagram
+  autonumber
+  participant P as Patient
+  participant I as Infirmier
+  participant M as Médecin
+
+  P -&gt;&gt; I: Arrivée
+  I -&gt;&gt; M: Dossier
+  activate M
+  M --&gt;&gt; I: Instructions
+  deactivate M
+
+  Note over P,I: Accueil & triage
+
+  alt Urgent
+    I -&gt;&gt; M: Appel prioritaire
+  else Standard
+    I -&gt;&gt; P: Salle d'attente
+  end
+</code></pre>
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
+      <div><span class="font-mono bg-gray-100 px-2 py-1 rounded">-&gt;&gt;</span> message synchrone</div>
+      <div><span class="font-mono bg-gray-100 px-2 py-1 rounded">--&gt;&gt;</span> message asynchrone</div>
+      <div><span class="font-mono bg-gray-100 px-2 py-1 rounded">activate / deactivate</span> activation de lifeline</div>
+      <div><span class="font-mono bg-gray-100 px-2 py-1 rounded">Note over A,B</span> note</div>
+      <div><span class="font-mono bg-gray-100 px-2 py-1 rounded">alt / else / end</span> branches</div>
+      <div><span class="font-mono bg-gray-100 px-2 py-1 rounded">par / opt / loop</span> autres blocs</div>
+    </div>
+  </section>
+
+  <!-- Class -->
+  <section class="space-y-3">
+    <h4 class="text-lg font-semibold">3) Class (modèle objet)</h4>
+    <pre class="bg-gray-50 border border-gray-200 rounded-lg p-4 overflow-x-auto text-xs leading-5"><code>classDiagram
+  class Patient {
+    +id: string
+    +nom: string
+    +admettre()
+  }
+  class Dossier {
+    +id: string
+    +etat: string
+  }
+  Patient "1" -- "1" Dossier : possède
+  Dossier &lt;|-- DossierUrgent : hérite
+</code></pre>
+    <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
+      <div><span class="font-mono bg-gray-100 px-2 py-1 rounded">&lt;|--</span> héritage</div>
+      <div><span class="font-mono bg-gray-100 px-2 py-1 rounded">*--</span> composition</div>
+      <div><span class="font-mono bg-gray-100 px-2 py-1 rounded">o--</span> agrégation</div>
+      <div><span class="font-mono bg-gray-100 px-2 py-1 rounded">..&gt;</span> dépendance</div>
+      <div><span class="font-mono bg-gray-100 px-2 py-1 rounded">--</span> association</div>
+    </div>
+  </section>
+
+  <!-- State -->
+  <section class="space-y-3">
+    <h4 class="text-lg font-semibold">4) State (états)</h4>
+    <pre class="bg-gray-50 border border-gray-200 rounded-lg p-4 overflow-x-auto text-xs leading-5"><code>stateDiagram-v2
+  [*] --&gt; EnAttente
+  EnAttente --&gt; EnCours: déclencher
+  EnCours --&gt; Terminé: finir
+  state EnCours {
+    [*] --&gt; Traitement
+    Traitement --&gt; Validation
+    Validation --&gt; [*]
+  }
+  Terminé --&gt; [*]
+</code></pre>
+  </section>
+
+  <!-- ER -->
+  <section class="space-y-3">
+    <h4 class="text-lg font-semibold">5) ER (entités / relations)</h4>
+    <pre class="bg-gray-50 border border-gray-200 rounded-lg p-4 overflow-x-auto text-xs leading-5"><code>erDiagram
+  PATIENT ||--o{ DOSSIER : possède
+  DOSSIER ||--o{ EXAMEN : comprend
+  PATIENT {
+    string id PK
+    string nom
+  }
+  DOSSIER {
+    string id PK
+    string etat
+  }
+</code></pre>
+    <p class="text-gray-600">Cardinalités : <span class="font-mono">||</span>=1, <span class="font-mono">o</span>=0..1, <span class="font-mono">{</span>=0..n.</p>
+  </section>
+
+  <!-- Gantt & Pie -->
+  <section class="space-y-3">
+    <h4 class="text-lg font-semibold">6) Gantt (planning) &amp; Pie (répartition)</h4>
+    <pre class="bg-gray-50 border border-gray-200 rounded-lg p-4 overflow-x-auto text-xs leading-5"><code>gantt
+  title Parcours patient
+  dateFormat  YYYY-MM-DD
+  section Accueil
+  Admission       :a1, 2025-04-01, 1d
+  Triage          :after a1, 1d
+  section Soins
+  Examens         :crit, 2d
+  Diagnostic      :1d
+</code></pre>
+    <pre class="bg-gray-50 border border-gray-200 rounded-lg p-4 overflow-x-auto text-xs leading-5"><code>pie showData
+  title Répartition des actes
+  "Consultation" : 40
+  "Examens"      : 35
+  "Urgences"     : 25
+</code></pre>
+  </section>
+
+  <!-- Astuces -->
+  <section class="space-y-2">
+    <h4 class="text-lg font-semibold">Astuces</h4>
+    <ul class="list-disc pl-5 space-y-1">
+      <li><strong>Labels lisibles</strong> : utilise <span class="font-mono">|Texte|</span> sur les liens (<span class="font-mono">A --&gt;|Oui| B</span>).</li>
+      <li><strong>Structurer</strong> : crée des sous-graphes (clusters) avec <span class="font-mono">subgraph … end</span>.</li>
+      <li><strong>Styles réutilisables</strong> : <span class="font-mono">classDef</span> puis <span class="font-mono">class id nomDeClasse;</span>.</li>
+      <li><strong>Dépannage</strong> : si “Erreur Mermaid”, vérifie les accolades/parenthèses et les mots-clés (ex. <span class="font-mono">stateDiagram-v2</span>).</li>
+      <li><strong>Export</strong> : <span class="font-mono">SVG</span> (vectoriel), <span class="font-mono">PNG</span> (transparent), <span class="font-mono">JPEG</span> (bitmap fond blanc).</li>
+    </ul>
+  </section>
+</div>
+
+    </div>
+  </div>
+
+  <!-- App -->
+  <script>
+    function app(){
+      return {
+        prompt:'',
+        mermaidCode:`sequenceDiagram
+autonumber
+participant Patient
+participant GAMME as GAMME (Gestion Admission)
+participant DPI as DPI (Dossier Patient Informatisé)
+Patient->>GAMME: ADT^A01 (Admission)
+GAMME->>DPI: ADT^A01 (Création dossier patient)
+`,
+        models:[], selectedModel:'', loading:false, loadingModels:false, lastError:'',
+        showSettings:false, showHelp:false,
+
+        // Visuels
+        theme:'enovacom',
+        primaryColor:'#0C4A45',
+        fontFamily:"'Work Sans', sans-serif",
+        fontSize:14, // taille fixée
+        isRecording:false, recognition:null,
+
+        // Thèmes riches (couleur des boîtes + fond canvas)
+        availableThemes:[
+          {id:'enovacom',name:'Enovacom', stroke:'#0C4A45', boxBg:'#E8F5F4', boxBorder:'#0C4A45', boxText:'#0e1f1c', canvasBg:'#ffffff'},
+          {id:'midnight',name:'Midnight',  stroke:'#8B5CF6', boxBg:'#1f2937', boxBorder:'#8B5CF6', boxText:'#ffffff', canvasBg:'#0F172A', dark:true},
+          {id:'graphite',name:'Graphite',  stroke:'#334155', boxBg:'#F1F5F9', boxBorder:'#334155', boxText:'#0F172A', canvasBg:'#ffffff'},
+          {id:'ocean',   name:'Océan',     stroke:'#0EA5E9', boxBg:'#ECFEFF', boxBorder:'#0EA5E9', boxText:'#083344', canvasBg:'#F0FAFF'},
+          {id:'emerald', name:'Émeraude',  stroke:'#10B981', boxBg:'#ECFDF5', boxBorder:'#10B981', boxText:'#064E3B', canvasBg:'#ffffff'},
+          {id:'rose',    name:'Quartz Rose',stroke:'#E11D48', boxBg:'#FFF1F2', boxBorder:'#E11D48', boxText:'#881337', canvasBg:'#ffffff'},
+          {id:'amber',   name:'Ambre',     stroke:'#F59E0B', boxBg:'#FFFBEB', boxBorder:'#F59E0B', boxText:'#78350F', canvasBg:'#ffffff'},
+          {id:'violet',  name:'Violet',    stroke:'#7C3AED', boxBg:'#F5F3FF', boxBorder:'#7C3AED', boxText:'#4C1D95', canvasBg:'#ffffff'},
+          {id:'cyan',    name:'Cyan',      stroke:'#06B6D4', boxBg:'#ECFEFF', boxBorder:'#06B6D4', boxText:'#164E63', canvasBg:'#ffffff'},
+          {id:'lime',    name:'Citron Vert', stroke:'#84CC16', boxBg:'#F7FEE7', boxBorder:'#84CC16', boxText:'#365314', canvasBg:'#ffffff'},
+          {id:'sand',    name:'Sable',     stroke:'#D97706', boxBg:'#FFFBEB', boxBorder:'#D97706', boxText:'#451A03', canvasBg:'#FFF7ED'},
+          {id:'lavender',name:'Lavande',   stroke:'#8B5CF6', boxBg:'#F5F3FF', boxBorder:'#8B5CF6', boxText:'#4C1D95', canvasBg:'#ffffff'},
+          {id:'neutral', name:'Neutre',    stroke:'#6B7280', boxBg:'#F9FAFB', boxBorder:'#6B7280', boxText:'#374151', canvasBg:'#ffffff'},
+          {id:'forest',  name:'Forêt',     stroke:'#065F46', boxBg:'#ECFDF5', boxBorder:'#065F46', boxText:'#064E3B', canvasBg:'#ffffff'},
+          {id:'ink',     name:'Encre',     stroke:'#111827', boxBg:'#F3F4F6', boxBorder:'#111827', boxText:'#111827', canvasBg:'#ffffff'}
+        ],
+
+        settingsForm:{ base_url:'https://api.mistral.ai', api_key:'' },
+        renderTimeout:null,
+
+        /* ---- Helpers couleurs ---- */
+        mix(c1, c2, p){ // mélange 0..1
+          const a=this.hex2rgb(c1), b=this.hex2rgb(c2);
+          const r=Math.round(a.r+(b.r-a.r)*p), g=Math.round(a.g+(b.g-a.g)*p), bl=Math.round(a.b+(b.b-a.b)*p);
+          return `#${[r,g,bl].map(x=>x.toString(16).padStart(2,'0')).join('')}`;
+        },
+        hex2rgb(hex){ const m=hex.replace('#',''); return {r:parseInt(m.substr(0,2),16),g:parseInt(m.substr(2,2),16),b:parseInt(m.substr(4,2),16)}; },
+
+        /* ---- Lifecycle ---- */
+        init(){
+          this.loadFromStorage();
+          this.applyTheme();    // recolor UI si Enovacom
+          this.applyFontToPage();
+          this.loadModels();
+          this.initSpeech();
+          this.renderMermaid();
+          document.addEventListener('keydown',(e)=>{ if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){ e.preventDefault(); this.generate(); }});
+        },
+
+        loadFromStorage(){
+          const c=localStorage;
+          const code=c.getItem('diagflow_code'); if(code) this.mermaidCode=code;
+          const theme=c.getItem('diagflow_theme'); if(theme) this.theme=theme;
+          const color=c.getItem('diagflow_color'); if(color) this.primaryColor=color;
+          const font=c.getItem('diagflow_font'); if(font) this.fontFamily=font;
+          const model=c.getItem('diagflow_model'); if(model) this.selectedModel=model;
+        },
+        saveToStorage(){
+          const c=localStorage;
+          c.setItem('diagflow_code', this.mermaidCode);
+          c.setItem('diagflow_theme', this.theme);
+          c.setItem('diagflow_color', this.primaryColor);
+          c.setItem('diagflow_font', this.fontFamily);
+          if(this.selectedModel) c.setItem('diagflow_model', this.selectedModel);
+        },
+
+        async loadModels(){
+          this.loadingModels=true; this.models=[]; this.selectedModel='';
+          try{
+            const r=await fetch('/api/mistral/models');
+            if(r.ok){ const d=await r.json(); this.models=d.models||[]; this.selectedModel=this.models[0]||''; }
+          }catch(e){ /* silencieux */ }
+          finally{ this.loadingModels=false; this.saveToStorage(); }
+        },
+
+        debouncedRender(){ clearTimeout(this.renderTimeout); this.renderTimeout=setTimeout(()=>{ this.renderMermaid(); this.saveToStorage(); },250); },
+
+        /* ---- Thème ---- */
+        applyTheme(){
+          const th=this.availableThemes.find(t=>t.id===this.theme);
+          if(!th) return;
+          this.primaryColor = th.stroke;
+
+          // Recolor UI seulement pour Enovacom (branding)
+          if(th.id==='enovacom'){
+            const r=document.documentElement.style;
+            r.setProperty('--primary', '#0C4A45'); r.setProperty('--primary-light', '#0f5650');
+            r.setProperty('--primary-dark', '#083832'); r.setProperty('--accent', '#22c55e');
+            r.setProperty('--accent-light', '#4ade80');
+          }
+          this.saveToStorage();
+        },
+        onFontChange(){ this.applyFontToPage(); this.renderMermaid(); this.saveToStorage(); },
+        applyFontToPage(){ const preview=document.getElementById('preview'); if(preview){ preview.style.setProperty('--app-font', this.fontFamily); } },
+        updateColors(){ this.saveToStorage(); },
+
+        /* ---- Rendu Mermaid avec couleurs de BOÎTES par thème ---- */
+        async renderMermaid(){
+          if(!this.mermaidCode.trim()){
+            document.getElementById('preview').innerHTML='<div class="text-gray-400 text-center py-8">Aucun code à afficher</div>'; return;
+          }
+          const th=this.availableThemes.find(t=>t.id===this.theme) || this.availableThemes[0];
+          const isDark=!!th.dark;
+          const cssFamily=this.fontFamily.replace(/"/g,"'");
+          const edgeBg=isDark ? this.mix(th.canvasBg,'#000',.3) : '#ffffff';
+
+          const themeCSS = `
+            svg { background:${th.canvasBg}; }
+            /* Flowchart nodes */
+            .node rect, .node polygon, .node path { fill:${th.boxBg}; stroke:${th.boxBorder}; }
+            .node text { fill:${th.boxText}; }
+            /* Clusters */
+            .cluster rect { fill:${this.mix(th.boxBg, '#ffffff', isDark?-.2:.2)}; stroke:${th.boxBorder}; }
+            .cluster text { fill:${th.boxText}; }
+            /* Edge labels & titles */
+            .edgeLabel, .label { color:${th.boxText}; }
+            .edgeLabel rect { fill:${edgeBg}; }
+            /* Sequence actors & notes */
+            .actor > rect { fill:${th.boxBg}; stroke:${th.boxBorder}; }
+            .actor > text { fill:${th.boxText}; }
+            .note { fill:${this.mix(th.boxBg,'#ffffff',.1)}; stroke:${this.mix(th.boxBorder,'#000',.05)}; }
+            .messageText { fill:${th.boxText}; }
+          `;
+
+          try{
+            mermaid.initialize({
+              startOnLoad:false,
+              securityLevel:'loose',
+              theme: isDark ? 'dark' : 'base',
+              themeVariables:{
+                primaryColor: this.primaryColor,
+                primaryTextColor: th.boxText,
+                lineColor: this.primaryColor,
+                fontFamily: this.fontFamily,
+                fontSize: this.fontSize + 'px',
+                background: th.canvasBg,
+                mainBkg: th.boxBg,
+                clusterBkg: this.mix(th.boxBg,'#ffffff', isDark?-.15:.15),
+                clusterBorder: th.boxBorder,
+                secondaryColor: this.mix(this.primaryColor,'#ffffff',.5),
+                tertiaryColor: this.mix(this.primaryColor,'#ffffff',.8),
+                edgeLabelBackground: edgeBg,
+                noteBkgColor: this.mix(th.boxBg,'#ffffff',.1),
+                noteBorderColor: this.mix(th.boxBorder,'#000',.05),
+                actorBkg: th.boxBg,
+                actorBorder: th.boxBorder,
+                actorTextColor: th.boxText
+              },
+              themeCSS
+            });
+
+            const preview=document.getElementById('preview');
+            preview.innerHTML='';
+            const { svg } = await mermaid.render('mermaid-diagram', this.mermaidCode);
+            preview.innerHTML=svg;
+
+            const svgEl=preview.querySelector('svg');
+            if(svgEl){ svgEl.style.fontFamily=this.fontFamily; svgEl.style.fontSize=this.fontSize+'px'; }
+            this.lastError='';
+          }catch(err){
+            this.lastError = err?.message || 'Erreur Mermaid';
+            document.getElementById('preview').innerHTML = `<div class="text-red-600 text-center py-8">❌ ${this.lastError}</div>`;
+          }
+        },
+
+        /* ---- Dictée ---- */
+        initSpeech(){
+          const Rec=window.SpeechRecognition||window.webkitSpeechRecognition;
+          if(!Rec) return;
+          this.recognition=new Rec(); this.recognition.continuous=true; this.recognition.interimResults=true; this.recognition.lang='fr-FR';
+          this.recognition.onresult=(e)=>{ for(let i=e.resultIndex;i<e.results.length;i++){ const t=e.results[i][0].transcript; if(e.results[i].isFinal) this.prompt=(this.prompt.trim()?this.prompt+' ':'')+t.trim(); } };
+          this.recognition.onerror=()=>{ this.isRecording=false; }; this.recognition.onend=()=>{ this.isRecording=false; };
+        },
+        toggleDictation(){ if(!this.recognition){ this.showToast('Dictée non supportée','error'); return; } this.isRecording?this.stopDictation():this.startDictation(); },
+        startDictation(){ try{ this.recognition.start(); this.isRecording=true; this.showToast('Dictée démarrée','success'); }catch(e){ this.showToast('Impossible de démarrer la dictée','error'); } },
+        stopDictation(){ try{ this.recognition.stop(); }catch(e){} this.isRecording=false; this.showToast('Dictée arrêtée','success'); },
+
+        /* ---- Génération ---- */
+        async generate(){
+          if(!this.prompt.trim()){ this.showToast('Veuillez saisir un prompt','error'); return; }
+          this.loading=true;
+          try{
+            const r=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:this.prompt,engine:'mistral',model:this.selectedModel})});
+            const d=await r.json();
+            if(r.ok){ this.mermaidCode=d.mermaid; this.renderMermaid(); this.showToast('Diagramme généré !','success'); }
+            else{ this.showToast(d.error||'Erreur lors de la génération','error'); }
+          }catch(e){ this.showToast('Erreur réseau','error'); }
+          finally{ this.loading=false; }
+        },
+
+        generateDemo(){
+          const demos=[`flowchart TD
+A[Arrivée patient] --> B{Urgence ?}
+B -->|Oui| C[Triage]
+B -->|Non| D[Accueil]
+C --> E[Consultation]
+D --> F[Prise RDV]
+E --> G{Examens ?}
+F --> G
+G -->|Oui| H[Prescrire]
+G -->|Non| I[Diagnostic]
+H --> J[Examens]
+J --> I
+I --> K[Plan de traitement]
+K --> L[Suivi patient]`,
+`sequenceDiagram
+autonumber
+participant P as Patient
+participant I as Infirmier
+participant M as Médecin
+P->>I: Arrivée
+I->>M: Dossier
+activate M
+M-->>I: Instructions
+deactivate M
+I-->>P: Explications`];
+          this.mermaidCode=demos[Math.floor(Math.random()*demos.length)];
+          this.renderMermaid(); this.showToast('Démo chargée !','success');
+        },
+
+        /* ---- Export fiable (toBlob) ---- */
+        exportSvg(){
+          const svg=document.querySelector('#preview svg');
+          if(!svg){ this.showToast('Aucun diagramme à exporter','error'); return; }
+          const data=new XMLSerializer().serializeToString(svg);
+          const blob=new Blob([data],{type:'image/svg+xml'});
+          const url=URL.createObjectURL(blob);
+          const a=document.createElement('a'); a.href=url; a.download='diagram.svg';
+          document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+          this.showToast('SVG téléchargé','success');
+        },
+        async exportPng(scale=2){ await this.exportRaster('image/png','png',scale,1); },
+        async exportJpeg(scale=2,quality=.92){ await this.exportRaster('image/jpeg','jpg',scale,quality); },
+
+        async exportRaster(mime,ext,scale,quality){
+          const svg=document.querySelector('#preview svg');
+          if(!svg){ this.showToast('Aucun diagramme à exporter','error'); return; }
+
+          if(document.fonts && document.fonts.ready){ try{ await document.fonts.ready; }catch(e){} }
+
+          const clone=svg.cloneNode(true);
+          if(!clone.getAttribute('xmlns')) clone.setAttribute('xmlns','http://www.w3.org/2000/svg');
+          clone.style.fontFamily=this.fontFamily; clone.style.fontSize=this.fontSize+'px';
+
+          const svgStr=new XMLSerializer().serializeToString(clone);
+          const svgBlob=new Blob([svgStr],{type:'image/svg+xml;charset=utf-8'});
+          const url=URL.createObjectURL(svgBlob);
+
+          const img=new Image();
+          img.onload=()=>{
+            let w,h;
+            const vb=clone.getAttribute('viewBox');
+            if(vb){ const p=vb.trim().split(/\s+/).map(Number); w=p[2]; h=p[3]; } else { const r=svg.getBBox(); w=r.width; h=r.height; }
+            w=Math.max(1,Math.floor(w)); h=Math.max(1,Math.floor(h));
+
+            const canvas=document.createElement('canvas');
+            canvas.width=Math.round(w*scale); canvas.height=Math.round(h*scale);
+            const ctx=canvas.getContext('2d');
+
+            if(mime==='image/jpeg'){ ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,canvas.width,canvas.height); } // PNG transparent par défaut
+            ctx.setTransform(scale,0,0,scale,0,0);
+            ctx.drawImage(img,0,0,w,h);
+
+            canvas.toBlob((blob)=>{
+              const outUrl=URL.createObjectURL(blob);
+              const a=document.createElement('a'); a.href=outUrl; a.download=`diagram.${ext}`;
+              document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(outUrl);
+              URL.revokeObjectURL(url);
+              this.showToast(`${ext.toUpperCase()} téléchargé`,'success');
+            }, mime, quality);
+          };
+          img.onerror=()=>{ URL.revokeObjectURL(url); this.showToast('Erreur export','error'); };
+          img.src=url;
+        },
+
+        showToast(msg,type='success'){ const t=document.getElementById('toast'); t.textContent=msg; t.className=`neo-toast ${type} show`; setTimeout(()=>{ t.className=`neo-toast ${type}`; },2400); }
+      }
+    }
+  </script>
+</body>
+</html>
