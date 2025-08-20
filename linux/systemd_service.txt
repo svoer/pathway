@@ -1,0 +1,27 @@
+[Unit]
+Description=Mermaid Flask AI - Editeur de diagrammes avec IA
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=mermaid
+Group=mermaid
+WorkingDirectory=/opt/mermaid-flask-ai
+Environment=PATH=/opt/mermaid-flask-ai/venv/bin
+ExecStart=/opt/mermaid-flask-ai/venv/bin/python app.py
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=always
+RestartSec=3
+StandardOutput=journal
+StandardError=journal
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/mermaid-flask-ai
+
+[Install]
+WantedBy=multi-user.target
