@@ -1,12 +1,31 @@
-# Enovacom Pathway — Générateur & Éditeur de diagrammes Mermaid
-> Du **prompt** au **diagramme** en quelques secondes. Thèmes modernes, exports propres (SVG/PNG/JPEG), et même la **dictée vocale** pour aller vite. ✨
+# 🤖 Pathway Editor – Mermaid AI Playground
+
+Bienvenue dans **Pathway Editor**, un outil qui transforme en temps réel tes idées en **diagrammes intelligents** ✨  
+Ici, tu n’as plus besoin d’écrire toi-même du code Mermaid : tu demandes à l’**IA** ce que tu veux (un organigramme, un Gantt, un mindmap, etc.), et le graphique est **généré instantanément** pour toi. 🚀
 
 ---
 
-## 🚀 Pourquoi ce projet ?
-Enovacom Pathway est une petite app web qui transforme des idées en **diagrammes Mermaid** prêts à partager.  
-Tape ton code Mermaid (ou décris ce que tu veux : *“diagramme de séquence admission patient”*), choisis un thème, et **exporte** en un clic.  
-Le but : **accélérer** les ateliers, cadrages fonctionnels, schémas d’archi, parcours patient, etc.
+## 🧠 Ce que l’IA peut générer pour toi
+En quelques secondes, tu peux obtenir :
+- 🌀 **Flowcharts** – Processus, parcours utilisateurs, décisions
+- 📊 **Gantt charts** – Plannings et roadmaps projet
+- 🤝 **Sequence diagrams** – Interactions entre systèmes
+- 🏷️ **Class & Entity diagrams** – UML et bases de données
+- 🧠 **Mindmaps** – Brainstorming, organisation d’idées
+- 📈 **State diagrams** – États d’un système
+- 🎨 Et tout autre diagramme pris en charge par [Mermaid.js](https://mermaid.js.org/)
+
+👉 Tu décris ton besoin avec une phrase simple, l’IA fait le reste.
+
+---
+
+## ⚡ Installation en 2 minutes
+Clone le repo (ou télécharge en ZIP) :
+
+```bash
+git clone https://github.com/svoer/pathway.git
+cd pathway
+
 
 ---
 
