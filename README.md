@@ -30,7 +30,6 @@ cd pathway
 Installe les dépendances et lance l’app (Windows) :
 
 ```bash
-pip install -r requirements.txt
 start.bat
 ```
 
@@ -263,26 +262,6 @@ Astuce : pour un rendu cohérent, pars d’un thème puis ajuste seulement la **
 ## ⌨️ Raccourcis
 
 * **Ctrl/Cmd + Entrée** : Générer depuis le prompt (si l’API est configurée).
-
----
-
-## 🏗️ Démarrage rapide
-
-1. Clone le repo et ouvre **`index.html`** dans ton navigateur.
-
-   > 💡 Pour éviter les restrictions CORS locales, lance un mini serveur :
-   > `python3 -m http.server 8080` puis va sur `http://localhost:8080`.
-2. (Optionnel) Configure l’API Mistral pour la génération automatique :
-
-   * UI : bouton **Paramètres** → saisis **Base URL** et **API Key**.
-   * **Backend attendu** (à implémenter côté serveur) :
-
-     * `GET /api/mistral/models` → liste des modèles
-     * `POST /api/settings/mistral` → stocke base\_url/api\_key
-     * `POST /api/generate` → `{ prompt, model } → { mermaid }`
-3. Tape/colle du **Mermaid** → choisis un **thème** → **Export** en 1 clic.
-
-> ⚠️ En production, installe **Tailwind** en **PostCSS/CLI** (évite le CDN).
 
 ---
 
