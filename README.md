@@ -25,26 +25,36 @@ Clone le repo (ou télécharge en ZIP) :
 ```bash
 git clone https://github.com/svoer/pathway.git
 cd pathway
+````
 
+Installe les dépendances et lance l’app (Windows) :
+
+```bash
+pip install -r requirements.txt
+start.bat
+```
 
 ---
 
 ## ✨ Ce que tu peux faire
-- **Générer** du Mermaid depuis un prompt (via API Mistral) ou écrire à la main.
-- **Prévisualiser** en direct le rendu.
-- **Thèmes** (15+ palettes) qui recolorisent **lignes, boîtes, acteurs, clusters, notes** et le **fond**.
-- **Personnaliser** la couleur principale & la police (Inter, Work Sans, Manrope, Montserrat, JetBrains Mono…).
-- **Dicter** ton prompt (Web Speech API, FR).
-- **Exporter** en **SVG** (vectoriel), **PNG** (fond transparent), **JPEG** (fond blanc).
+
+* **Générer** du Mermaid depuis un prompt (via API Mistral) ou écrire à la main.
+* **Prévisualiser** en direct le rendu.
+* **Thèmes** (15+ palettes) qui recolorisent **lignes, boîtes, acteurs, clusters, notes** et le **fond**.
+* **Personnaliser** la couleur principale & la police (Inter, Work Sans, Manrope, Montserrat, JetBrains Mono…).
+* **Dicter** ton prompt (Web Speech API, FR).
+* **Exporter** en **SVG** (vectoriel), **PNG** (fond transparent), **JPEG** (fond blanc).
 
 > ⚠️ Par design, l’export **.mmd** n’est pas exposé dans l’UI (on garde le focus sur les rendus finaux).
 
 ---
 
 ## 🧩 Types de diagrammes Mermaid supportés
+
 Mermaid permet beaucoup de formats. Tu peux mixer les exemples ci-dessous directement dans l’app.
 
 ### 1) Flowchart (processus)
+
 ```mermaid
 flowchart LR
   A[Arrivée patient] --> B{Urgence ?}
@@ -54,12 +64,14 @@ flowchart LR
   D --> E
   style C fill:#E8F5F4,stroke:#0C4A45,stroke-width:2px,color:#0e1f1c
 ```
-**Flèches rapides** : `-->` pleine · `-.->` pointillée · `==>` épaisse · `---` trait sans pointe  
+
+**Flèches rapides** : `-->` pleine · `-.->` pointillée · `==>` épaisse · `---` trait sans pointe
 **Formes** : `[ ]` rectangle · `( )` arrondi · `(( ))` cercle · `{ }` décision · `[[ ]]` sous-routine · `[( )]` DB
 
 ---
 
 ### 2) Sequence (échanges)
+
 ```mermaid
 sequenceDiagram
   autonumber
@@ -84,6 +96,7 @@ sequenceDiagram
 ---
 
 ### 3) Class (modèle objet)
+
 ```mermaid
 classDiagram
   class Patient {
@@ -102,6 +115,7 @@ classDiagram
 ---
 
 ### 4) State (états)
+
 ```mermaid
 stateDiagram-v2
   [*] --> EnAttente
@@ -118,6 +132,7 @@ stateDiagram-v2
 ---
 
 ### 5) ER (entités / relations)
+
 ```mermaid
 erDiagram
   PATIENT ||--o{ DOSSIER : possède
@@ -135,6 +150,7 @@ erDiagram
 ---
 
 ### 6) Gantt (planning)
+
 ```mermaid
 gantt
   title Parcours patient
@@ -150,6 +166,7 @@ gantt
 ---
 
 ### 7) Pie (répartition)
+
 ```mermaid
 pie showData
   title Répartition des actes
@@ -161,6 +178,7 @@ pie showData
 ---
 
 ### 8) Journey (parcours UX)
+
 ```mermaid
 journey
   title Parcours patient
@@ -175,6 +193,7 @@ journey
 ---
 
 ### 9) Timeline (chronologie)
+
 ```mermaid
 timeline
   title Dossier patient
@@ -187,6 +206,7 @@ timeline
 ---
 
 ### 10) Mindmap (idées)
+
 ```mermaid
 mindmap
   root((Parcours))
@@ -204,6 +224,7 @@ mindmap
 ---
 
 ### 11) Git graph (workflows git)
+
 ```mermaid
 gitGraph
   commit id: "init"
@@ -215,43 +236,50 @@ gitGraph
   commit id: "release"
 ```
 
-> *Selon la version de Mermaid embarquée, d’autres types peuvent être dispos (p.ex. quadrantChart).
+> \*Selon la version de Mermaid embarquée, d’autres types peuvent être dispos (p.ex. quadrantChart).
 
 ---
 
 ## 🖌️ Thèmes & personnalisation
-- **Sélecteur de thème** : applique des palettes complètes (lignes **et** boîtes : nœuds, acteurs, clusters, notes) + **fond du canvas**.
-- **Couleur** : tu peux surcharger la couleur principale des liens.
-- **Police** : Inter, Work Sans, Manrope, Montserrat, JetBrains Mono (monospace).
+
+* **Sélecteur de thème** : applique des palettes complètes (lignes **et** boîtes : nœuds, acteurs, clusters, notes) + **fond du canvas**.
+* **Couleur** : tu peux surcharger la couleur principale des liens.
+* **Police** : Inter, Work Sans, Manrope, Montserrat, JetBrains Mono (monospace).
 
 Astuce : pour un rendu cohérent, pars d’un thème puis ajuste seulement la **couleur principale**.
 
 ---
 
 ## 📤 Exports
-- **SVG** : vectoriel (impeccable pour Figma/Illustrator).
-- **PNG** : bitmap **transparent** (présentations, web).
-- **JPEG** : bitmap fond **blanc** (documents bureautiques).
+
+* **SVG** : vectoriel (impeccable pour Figma/Illustrator).
+* **PNG** : bitmap **transparent** (présentations, web).
+* **JPEG** : bitmap fond **blanc** (documents bureautiques).
 
 > Les exports utilisent un pipeline **fiable** (SVG → Canvas → toBlob) pour éviter les soucis de polices et d’échelle.
 
 ---
 
 ## ⌨️ Raccourcis
-- **Ctrl/Cmd + Entrée** : Générer depuis le prompt (si l’API est configurée).
+
+* **Ctrl/Cmd + Entrée** : Générer depuis le prompt (si l’API est configurée).
 
 ---
 
 ## 🏗️ Démarrage rapide
-1. Clone le repo et ouvre **`index.html`** dans ton navigateur.  
-   > 💡 Pour éviter les restrictions CORS locales, lance un mini serveur :  
+
+1. Clone le repo et ouvre **`index.html`** dans ton navigateur.
+
+   > 💡 Pour éviter les restrictions CORS locales, lance un mini serveur :
    > `python3 -m http.server 8080` puis va sur `http://localhost:8080`.
 2. (Optionnel) Configure l’API Mistral pour la génération automatique :
-   - UI : bouton **Paramètres** → saisis **Base URL** et **API Key**.
-   - **Backend attendu** (à implémenter côté serveur) :
-     - `GET /api/mistral/models` → liste des modèles
-     - `POST /api/settings/mistral` → stocke base_url/api_key
-     - `POST /api/generate` → `{ prompt, model } → { mermaid }`
+
+   * UI : bouton **Paramètres** → saisis **Base URL** et **API Key**.
+   * **Backend attendu** (à implémenter côté serveur) :
+
+     * `GET /api/mistral/models` → liste des modèles
+     * `POST /api/settings/mistral` → stocke base\_url/api\_key
+     * `POST /api/generate` → `{ prompt, model } → { mermaid }`
 3. Tape/colle du **Mermaid** → choisis un **thème** → **Export** en 1 clic.
 
 > ⚠️ En production, installe **Tailwind** en **PostCSS/CLI** (évite le CDN).
@@ -259,6 +287,7 @@ Astuce : pour un rendu cohérent, pars d’un thème puis ajuste seulement la **
 ---
 
 ## 🧪 Démo rapide (copier/coller)
+
 ```mermaid
 sequenceDiagram
   autonumber
@@ -272,32 +301,40 @@ sequenceDiagram
 ---
 
 ## 🗺️ Architecture (très simple)
-- **Frontend** : HTML + Alpine.js + Mermaid v10 + Tailwind (CDN pour dev).
-- **Intégrations** : Web Speech API (dictée FR).
-- **Exports** : SVG direct, PNG/JPEG via Canvas `toBlob`.
-- **Backend (optionnel)** : endpoints REST minces pour parler à l’API Mistral.
+
+* **Frontend** : HTML + Alpine.js + Mermaid v10 + Tailwind (CDN pour dev).
+* **Intégrations** : Web Speech API (dictée FR).
+* **Exports** : SVG direct, PNG/JPEG via Canvas `toBlob`.
+* **Backend (optionnel)** : endpoints REST minces pour parler à l’API Mistral.
 
 ---
 
 ## 📌 Roadmap (idées)
-- Palette **brand-lock** (verrouiller la couleur pour certains thèmes).
-- **Templates** réutilisables (snippets Mermaid prêts à l’emploi).
-- **Historique**/versions du code Mermaid.
-- **Import .mmd** (glisser-déposer).
+
+* Palette **brand-lock** (verrouiller la couleur pour certains thèmes).
+* **Templates** réutilisables (snippets Mermaid prêts à l’emploi).
+* **Historique**/versions du code Mermaid.
+* **Import .mmd** (glisser-déposer).
 
 ---
 
 ## 🤝 Contribuer
-PR bienvenues ! Style code : clair, minimal, compos discret.  
-Design : sobre, “2025”, accessible (contrastes et tailles lisibles).
+
+PR bienvenues ! Style code : clair, minimal, compos discret.
+Design : sobre, “2025”, accessible (contrastes et tailles lisibles).
 
 ---
 
 ## 📄 Licence
+
 MIT — fais-toi plaisir ✌️
 
 ---
 
 ## 🙌 Crédits
-- [Mermaid](https://mermaid.js.org/) pour le moteur de rendu
-- Merci à toutes les personnes qui aiment les jolis schémas ❤️
+
+* [Mermaid](https://mermaid.js.org/) pour le moteur de rendu
+* Merci à toutes les personnes qui aiment les jolis schémas ❤️
+
+```
+```
