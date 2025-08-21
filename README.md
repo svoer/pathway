@@ -271,10 +271,10 @@ Astuce : pour un rendu cohérent, pars d’un thème puis ajuste seulement la **
 sequenceDiagram
   autonumber
   participant Patient
-  participant GAMME as GAMME (Gestion Admission)
+  participant GAM as GAM (Gestion Admission)
   participant DPI as DPI (Dossier Patient Informatisé)
-  Patient->>GAMME: ADT^A01 (Admission)
-  GAMME->>DPI: ADT^A01 (Création dossier patient)
+  Patient->>GAM: ADT^A01 (Admission)
+  GAM->>DPI: ADT^A01 (Création dossier patient)
 ```
 
 ---
