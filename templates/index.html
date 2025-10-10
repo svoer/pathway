@@ -131,7 +131,7 @@ family=Figtree:wght@400;600;700&display=swap" />
         <div class="flex items-center gap-3">
           <div x-data="{showDiagramMenu: false}" class="relative">
             <button @click="showDiagramMenu = !showDiagramMenu" class="neo-btn" title="Choisir un type de diagramme">
-              📊 Diagramme
+              Démo Diagramme
             </button>
             <div x-show="showDiagramMenu" @click.away="showDiagramMenu = false" x-cloak class="absolute top-full mt-2 right-0 bg-white border border-gray-200 rounded-xl shadow-xl p-2 z-50 min-w-[220px]">
               <button @click="loadDemoByType('flowchart'); showDiagramMenu = false" class="w-full text-left px-3 py-2 hover:bg-gray-50 rounded-lg transition-colors">🔄 Flowchart</button>
@@ -471,195 +471,261 @@ family=Figtree:wght@400;600;700&display=swap" />
   <div x-show="showHelp" x-cloak class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" @click.self="showHelp = false">
     <div class="bg-white border border-gray-200 rounded-2xl shadow-2xl max-w-5xl w-full max-h-[90vh] overflow-y-auto">
       <div class="sticky top-0 bg-white border-b p-6 rounded-t-2xl flex justify-between items-center" style="background: linear-gradient(135deg, #0C4A45 0%, #0f5650 100%);">
-        <div class="flex items-center gap-3">
-          <svg class="w-8 h-8 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"/>
-            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
-            <line x1="12" y1="17" x2="12.01" y2="17"/>
-          </svg>
-          <div>
-            <h3 class="text-2xl font-bold text-white">Guide Complet - Enovacom Pathway</h3>
-            <p class="text-white/80 text-sm mt-1">Créez des diagrammes professionnels en quelques clics</p>
-          </div>
+        <div>
+          <h3 class="text-2xl font-bold text-white">Guide Complet - Enovacom Pathway</h3>
+          <p class="text-white/80 text-sm mt-1">Créez des diagrammes professionnels en quelques clics</p>
         </div>
         <button @click="showHelp = false" class="neo-btn neo-btn-icon bg-white/20 hover:bg-white/30 text-white border-white/30" title="Fermer"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
       </div>
-      <div class="p-8 space-y-10 text-sm text-gray-800">
-  <!-- Intro -->
+      <div class="p-8 space-y-8 text-sm text-gray-800">
+
+  <!-- Démarrage rapide -->
   <section class="space-y-3">
-    <h3 class="text-xl font-bold">Guide rapide Mermaid</h3>
-    <p>
-      Mermaid transforme du texte en diagrammes. Écris ton code dans l’éditeur, l’aperçu se met à jour.
-      Tu peux ensuite exporter en <strong>SVG</strong>, <strong>PNG</strong> ou <strong>JPEG</strong>.
-    </p>
-    <ul class="list-disc pl-5 grid grid-cols-1 md:grid-cols-2 gap-1">
-      <li><strong>Directions</strong> : <code>flowchart <span class="font-mono">TB</span>|<span class="font-mono">LR</span>|<span class="font-mono">RL</span>|<span class="font-mono">BT</span></code> (Top-Bottom, Left-Right, etc.).</li>
-      <li><strong>Rendu</strong> : change le <em>Thème</em>, la <em>Couleur</em> et la <em>Police</em> pour un style cohérent.</li>
-    </ul>
+    <h3 class="text-2xl font-bold text-primary">Démarrage rapide</h3>
+    <p class="text-base">Enovacom Pathway transforme vos idées en diagrammes professionnels en quelques secondes grâce à l'IA.</p>
+    
+    <div class="bg-blue-50 border-l-4 border-blue-500 p-4 mt-4">
+      <h4 class="font-bold text-base mb-2">3 façons de créer un diagramme</h4>
+      <ol class="list-decimal pl-5 space-y-1">
+        <li><strong>Avec l'IA</strong> : Décrivez votre diagramme en français dans la zone de texte et cliquez sur "Générer"</li>
+        <li><strong>Par dictée vocale</strong> : Cliquez sur 🎤 et parlez, l'IA comprendra votre demande</li>
+        <li><strong>Manuellement</strong> : Écrivez directement le code Mermaid dans l'éditeur</li>
+      </ol>
+    </div>
   </section>
 
-  <!-- Flowchart -->
+  <!-- Exemples de prompts IA -->
   <section class="space-y-3">
-    <h4 class="text-lg font-semibold">1) Flowchart (processus)</h4>
-    <p>Boîtes, décisions, étiquettes et styles de flèches.</p>
-    <pre class="bg-gray-50 border border-gray-200 rounded-lg p-4 overflow-x-auto text-xs leading-5"><code>flowchart LR
-  %% formes
-  A[Étape] --> B{Décision ?}
-  B -- Oui --> C((OK))
-  B -. Non .-> D[[Sous-procédé]]
-  C ==> E[Fin]
-
-  %% styles
-  style C fill:#E8F5F4,stroke:#0C4A45,stroke-width:2px,color:#0e1f1c
-  classDef accent fill:#FEE2E2,stroke:#DC2626,color:#991B1B,stroke-width:2px
-  class D accent;
-</code></pre>
-    <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
-      <div><span class="font-mono bg-gray-100 px-2 py-1 rounded">[Texte]</span> Rectangle</div>
-      <div><span class="font-mono bg-gray-100 px-2 py-1 rounded">(Texte)</span> Coins arrondis</div>
-      <div><span class="font-mono bg-gray-100 px-2 py-1 rounded">((Texte))</span> Cercle</div>
-      <div><span class="font-mono bg-gray-100 px-2 py-1 rounded">{Texte}</span> Losange (décision)</div>
-      <div><span class="font-mono bg-gray-100 px-2 py-1 rounded">[[Texte]]</span> Sous-routine</div>
-      <div><span class="font-mono bg-gray-100 px-2 py-1 rounded">[(Texte)]</span> Base de données</div>
+    <h3 class="text-2xl font-bold text-primary">Exemples de prompts IA</h3>
+    
+    <div class="bg-amber-50 border-l-4 border-amber-500 p-4">
+      <p class="font-bold text-base mb-2">⚠️ Important : Précisez toujours le type de diagramme au début de votre prompt !</p>
     </div>
-    <div>
-      <p class="mb-2 font-medium">Flèches & étiquettes (cheatsheet) :</p>
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-        <div><span class="font-mono bg-gray-100 px-2 py-1 rounded">A --&gt; B</span> flèche pleine</div>
-        <div><span class="font-mono bg-gray-100 px-2 py-1 rounded">A -.-> B</span> pointillée</div>
-        <div><span class="font-mono bg-gray-100 px-2 py-1 rounded">A ==&gt; B</span> épaisse</div>
-        <div><span class="font-mono bg-gray-100 px-2 py-1 rounded">A -- Texte --&gt; B</span> label au milieu</div>
-        <div><span class="font-mono bg-gray-100 px-2 py-1 rounded">A --&gt;|Oui| B</span> label près de la flèche</div>
-        <div><span class="font-mono bg-gray-100 px-2 py-1 rounded">A --- B</span> simple trait (sans pointe)</div>
+
+    <div class="space-y-3 mt-4">
+      <div class="bg-gray-50 border border-gray-200 rounded-lg p-3">
+        <h5 class="font-bold mb-2">Pour un Flowchart :</h5>
+        <ul class="list-disc pl-5 space-y-1 text-sm">
+          <li><code class="bg-white px-2 py-1 rounded border">Flowchart : Crée un diagramme du processus d'admission d'un patient à l'hôpital</code></li>
+          <li><code class="bg-white px-2 py-1 rounded border">Flowchart : Montre-moi le workflow de validation d'une ordonnance</code></li>
+        </ul>
+      </div>
+
+      <div class="bg-gray-50 border border-gray-200 rounded-lg p-3">
+        <h5 class="font-bold mb-2">Pour un diagramme de Séquence :</h5>
+        <ul class="list-disc pl-5 space-y-1 text-sm">
+          <li><code class="bg-white px-2 py-1 rounded border">Sequence : Diagramme des échanges entre patient, infirmier et médecin lors d'une consultation</code></li>
+          <li><code class="bg-white px-2 py-1 rounded border">Sequence : Interactions entre le système de prescription et la pharmacie</code></li>
+        </ul>
+      </div>
+
+      <div class="bg-gray-50 border border-gray-200 rounded-lg p-3">
+        <h5 class="font-bold mb-2">Pour un diagramme de Classes :</h5>
+        <ul class="list-disc pl-5 space-y-1 text-sm">
+          <li><code class="bg-white px-2 py-1 rounded border">Class : Modélise les entités Patient, Médecin, Consultation et Ordonnance</code></li>
+        </ul>
+      </div>
+
+      <div class="bg-gray-50 border border-gray-200 rounded-lg p-3">
+        <h5 class="font-bold mb-2">Pour un diagramme d'États :</h5>
+        <ul class="list-disc pl-5 space-y-1 text-sm">
+          <li><code class="bg-white px-2 py-1 rounded border">State : États d'une demande d'examen médical de la création à l'archivage</code></li>
+        </ul>
+      </div>
+
+      <div class="bg-gray-50 border border-gray-200 rounded-lg p-3">
+        <h5 class="font-bold mb-2">Autres types :</h5>
+        <ul class="list-disc pl-5 space-y-1 text-sm">
+          <li><code class="bg-white px-2 py-1 rounded border">ER : Relations entre Patient, Médecin, Consultation et Ordonnance</code></li>
+          <li><code class="bg-white px-2 py-1 rounded border">Gantt : Planning d'un projet de déploiement sur 6 mois</code></li>
+        </ul>
       </div>
     </div>
   </section>
 
-  <!-- Sequence -->
+  <!-- Personnalisation -->
   <section class="space-y-3">
-    <h4 class="text-lg font-semibold">2) Sequence (échanges)</h4>
-    <p>Participants, messages, activations, conditions et notes.</p>
-    <pre class="bg-gray-50 border border-gray-200 rounded-lg p-4 overflow-x-auto text-xs leading-5"><code>sequenceDiagram
-  autonumber
-  participant P as Patient
-  participant I as Infirmier
-  participant M as Médecin
-
-  P -&gt;&gt; I: Arrivée
-  I -&gt;&gt; M: Dossier
-  activate M
-  M --&gt;&gt; I: Instructions
-  deactivate M
-
-  Note over P,I: Accueil & triage
-
-  alt Urgent
-    I -&gt;&gt; M: Appel prioritaire
-  else Standard
-    I -&gt;&gt; P: Salle d'attente
-  end
-</code></pre>
-    <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
-      <div><span class="font-mono bg-gray-100 px-2 py-1 rounded">-&gt;&gt;</span> message synchrone</div>
-      <div><span class="font-mono bg-gray-100 px-2 py-1 rounded">--&gt;&gt;</span> message asynchrone</div>
-      <div><span class="font-mono bg-gray-100 px-2 py-1 rounded">activate / deactivate</span> activation de lifeline</div>
-      <div><span class="font-mono bg-gray-100 px-2 py-1 rounded">Note over A,B</span> note</div>
-      <div><span class="font-mono bg-gray-100 px-2 py-1 rounded">alt / else / end</span> branches</div>
-      <div><span class="font-mono bg-gray-100 px-2 py-1 rounded">par / opt / loop</span> autres blocs</div>
+    <h3 class="text-2xl font-bold text-primary">Personnalisation</h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+        <h5 class="font-bold mb-2">🎨 Thèmes</h5>
+        <p>Choisissez parmi 30+ thèmes professionnels classés par catégorie (Pro, Sombres, Bleus, Verts, etc.)</p>
+      </div>
+      <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+        <h5 class="font-bold mb-2">🎨 Couleurs</h5>
+        <ul class="list-disc pl-5 space-y-1">
+          <li><strong>Bordure</strong> : Couleur des contours</li>
+          <li><strong>Remplissage</strong> : Couleur de fond</li>
+          <li><strong>Texte</strong> : Couleur du texte</li>
+        </ul>
+      </div>
+      <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+        <h5 class="font-bold mb-2">🔤 Police</h5>
+        <p>Plus de 40 polices disponibles : modernes, professionnelles, fantaisie ou monospace</p>
+      </div>
+      <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+        <h5 class="font-bold mb-2">📏 Taille de police</h5>
+        <p>Ajustez de 10px à 28px avec le curseur</p>
+      </div>
     </div>
   </section>
 
-  <!-- Class -->
+  <!-- Export -->
   <section class="space-y-3">
-    <h4 class="text-lg font-semibold">3) Class (modèle objet)</h4>
-    <pre class="bg-gray-50 border border-gray-200 rounded-lg p-4 overflow-x-auto text-xs leading-5"><code>classDiagram
-  class Patient {
-    +id: string
-    +nom: string
-    +admettre()
-  }
-  class Dossier {
-    +id: string
-    +etat: string
-  }
-  Patient "1" -- "1" Dossier : possède
-  Dossier &lt;|-- DossierUrgent : hérite
-</code></pre>
-    <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
-      <div><span class="font-mono bg-gray-100 px-2 py-1 rounded">&lt;|--</span> héritage</div>
-      <div><span class="font-mono bg-gray-100 px-2 py-1 rounded">*--</span> composition</div>
-      <div><span class="font-mono bg-gray-100 px-2 py-1 rounded">o--</span> agrégation</div>
-      <div><span class="font-mono bg-gray-100 px-2 py-1 rounded">..&gt;</span> dépendance</div>
-      <div><span class="font-mono bg-gray-100 px-2 py-1 rounded">--</span> association</div>
+    <h3 class="text-2xl font-bold text-primary">Export</h3>
+    <p>Téléchargez vos diagrammes en 3 formats :</p>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+      <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 text-center">
+        <div class="text-3xl mb-2">📄</div>
+        <h5 class="font-bold">SVG</h5>
+        <p class="text-xs mt-1">Vectoriel, qualité parfaite, idéal pour l'impression</p>
+      </div>
+      <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 text-center">
+        <div class="text-3xl mb-2">🖼️</div>
+        <h5 class="font-bold">PNG</h5>
+        <p class="text-xs mt-1">Fond transparent, parfait pour les présentations</p>
+      </div>
+      <div class="bg-gray-50 border border-gray-200 rounded-lg p-4 text-center">
+        <div class="text-3xl mb-2">📸</div>
+        <h5 class="font-bold">JPEG</h5>
+        <p class="text-xs mt-1">Fond blanc, compatible partout</p>
+      </div>
     </div>
   </section>
 
-  <!-- State -->
-  <section class="space-y-3">
-    <h4 class="text-lg font-semibold">4) State (états)</h4>
-    <pre class="bg-gray-50 border border-gray-200 rounded-lg p-4 overflow-x-auto text-xs leading-5"><code>stateDiagram-v2
-  [*] --&gt; EnAttente
-  EnAttente --&gt; EnCours: déclencher
-  EnCours --&gt; Terminé: finir
-  state EnCours {
-    [*] --&gt; Traitement
-    Traitement --&gt; Validation
-    Validation --&gt; [*]
-  }
-  Terminé --&gt; [*]
-</code></pre>
-  </section>
+  <!-- Syntaxe Mermaid -->
+  <section class="space-y-4">
+    <h3 class="text-2xl font-bold text-primary">Syntaxe Mermaid - L'essentiel</h3>
 
-  <!-- ER -->
-  <section class="space-y-3">
-    <h4 class="text-lg font-semibold">5) ER (entités / relations)</h4>
-    <pre class="bg-gray-50 border border-gray-200 rounded-lg p-4 overflow-x-auto text-xs leading-5"><code>erDiagram
-  PATIENT ||--o{ DOSSIER : possède
-  DOSSIER ||--o{ EXAMEN : comprend
-  PATIENT {
-    string id PK
-    string nom
-  }
-  DOSSIER {
-    string id PK
-    string etat
-  }
-</code></pre>
-    <p class="text-gray-600">Cardinalités : <span class="font-mono">||</span>=1, <span class="font-mono">o</span>=0..1, <span class="font-mono">{</span>=0..n.</p>
-  </section>
+    <!-- Flowchart -->
+    <div class="border-l-4 border-primary pl-4">
+      <h4 class="text-lg font-bold mb-2">Flowchart (organigramme)</h4>
+      <pre class="bg-gray-50 border border-gray-200 rounded-lg p-4 overflow-x-auto text-xs leading-5"><code>flowchart LR
+    A[Début] --&gt; B{Décision?}
+    B --&gt;|Oui| C[Action 1]
+    B --&gt;|Non| D[Action 2]
+    C --&gt; E[Fin]
+    D --&gt; E</code></pre>
+      <div class="mt-3 grid grid-cols-2 md:grid-cols-3 gap-2">
+        <div class="text-xs"><code class="bg-gray-100 px-2 py-1 rounded">[Texte]</code> Rectangle</div>
+        <div class="text-xs"><code class="bg-gray-100 px-2 py-1 rounded">(Texte)</code> Coins arrondis</div>
+        <div class="text-xs"><code class="bg-gray-100 px-2 py-1 rounded">{Texte}</code> Losange</div>
+        <div class="text-xs"><code class="bg-gray-100 px-2 py-1 rounded">((Texte))</code> Cercle</div>
+        <div class="text-xs"><code class="bg-gray-100 px-2 py-1 rounded">[[Texte]]</code> Sous-routine</div>
+        <div class="text-xs"><code class="bg-gray-100 px-2 py-1 rounded">[(Texte)]</code> Base de données</div>
+      </div>
+      <div class="mt-3">
+        <p class="font-semibold text-xs mb-2">Flèches :</p>
+        <div class="grid grid-cols-2 md:grid-cols-3 gap-2">
+          <div class="text-xs"><code class="bg-gray-100 px-2 py-1 rounded">--&gt;</code> Simple</div>
+          <div class="text-xs"><code class="bg-gray-100 px-2 py-1 rounded">-.-&gt;</code> Pointillée</div>
+          <div class="text-xs"><code class="bg-gray-100 px-2 py-1 rounded">==&gt;</code> Épaisse</div>
+          <div class="text-xs"><code class="bg-gray-100 px-2 py-1 rounded">--&gt;|Texte|</code> Avec label</div>
+        </div>
+      </div>
+    </div>
 
-  <!-- Gantt & Pie -->
-  <section class="space-y-3">
-    <h4 class="text-lg font-semibold">6) Gantt (planning) &amp; Pie (répartition)</h4>
-    <pre class="bg-gray-50 border border-gray-200 rounded-lg p-4 overflow-x-auto text-xs leading-5"><code>gantt
-  title Parcours patient
-  dateFormat  YYYY-MM-DD
-  section Accueil
-  Admission       :a1, 2025-04-01, 1d
-  Triage          :after a1, 1d
-  section Soins
-  Examens         :crit, 2d
-  Diagnostic      :1d
-</code></pre>
-    <pre class="bg-gray-50 border border-gray-200 rounded-lg p-4 overflow-x-auto text-xs leading-5"><code>pie showData
-  title Répartition des actes
-  "Consultation" : 40
-  "Examens"      : 35
-  "Urgences"     : 25
-</code></pre>
+    <!-- Sequence -->
+    <div class="border-l-4 border-primary pl-4">
+      <h4 class="text-lg font-bold mb-2">Sequence (diagramme de séquence)</h4>
+      <pre class="bg-gray-50 border border-gray-200 rounded-lg p-4 overflow-x-auto text-xs leading-5"><code>sequenceDiagram
+    Patient-&gt;&gt;Infirmier: Arrivée
+    Infirmier-&gt;&gt;Médecin: Dossier patient
+    Médecin--&gt;&gt;Infirmier: Instructions
+    Infirmier--&gt;&gt;Patient: Prise en charge</code></pre>
+    </div>
+
+    <!-- Class -->
+    <div class="border-l-4 border-primary pl-4">
+      <h4 class="text-lg font-bold mb-2">Class (diagramme de classes)</h4>
+      <pre class="bg-gray-50 border border-gray-200 rounded-lg p-4 overflow-x-auto text-xs leading-5"><code>classDiagram
+    Patient --&gt; Consultation
+    Médecin --&gt; Consultation
+    Consultation --&gt; Ordonnance
+    
+    class Patient {
+        +String nom
+        +Date naissance
+        +consulter()
+    }</code></pre>
+    </div>
+
+    <!-- State -->
+    <div class="border-l-4 border-primary pl-4">
+      <h4 class="text-lg font-bold mb-2">State (diagramme d'états)</h4>
+      <pre class="bg-gray-50 border border-gray-200 rounded-lg p-4 overflow-x-auto text-xs leading-5"><code>stateDiagram-v2
+    [*] --&gt; Créé
+    Créé --&gt; EnCours : Démarrer
+    EnCours --&gt; Validé : Approuver
+    EnCours --&gt; Rejeté : Refuser
+    Validé --&gt; [*]
+    Rejeté --&gt; [*]</code></pre>
+    </div>
+
+    <!-- ER -->
+    <div class="border-l-4 border-primary pl-4">
+      <h4 class="text-lg font-bold mb-2">ER Diagram (entité-relation)</h4>
+      <pre class="bg-gray-50 border border-gray-200 rounded-lg p-4 overflow-x-auto text-xs leading-5"><code>erDiagram
+    PATIENT ||--o{ CONSULTATION : a
+    MEDECIN ||--o{ CONSULTATION : réalise
+    CONSULTATION ||--o{ ORDONNANCE : génère</code></pre>
+    </div>
   </section>
 
   <!-- Astuces -->
-  <section class="space-y-2">
-    <h4 class="text-lg font-semibold">Astuces</h4>
-    <ul class="list-disc pl-5 space-y-1">
-      <li><strong>Labels lisibles</strong> : utilise <span class="font-mono">|Texte|</span> sur les liens (<span class="font-mono">A --&gt;|Oui| B</span>).</li>
-      <li><strong>Structurer</strong> : crée des sous-graphes (clusters) avec <span class="font-mono">subgraph … end</span>.</li>
-      <li><strong>Styles réutilisables</strong> : <span class="font-mono">classDef</span> puis <span class="font-mono">class id nomDeClasse;</span>.</li>
-      <li><strong>Dépannage</strong> : si “Erreur Mermaid”, vérifie les accolades/parenthèses et les mots-clés (ex. <span class="font-mono">stateDiagram-v2</span>).</li>
-      <li><strong>Export</strong> : <span class="font-mono">SVG</span> (vectoriel), <span class="font-mono">PNG</span> (transparent), <span class="font-mono">JPEG</span> (bitmap fond blanc).</li>
-    </ul>
+  <section class="space-y-3">
+    <h3 class="text-2xl font-bold text-primary">Astuces</h3>
+    <div class="bg-green-50 border-l-4 border-green-500 p-4">
+      <ul class="space-y-2">
+        <li>✅ <strong>Utilisez l'historique</strong> : Vos 10 derniers prompts sont sauvegardés, cliquez dessus pour les réutiliser</li>
+        <li>✅ <strong>Démos rapides</strong> : Cliquez sur "Démo Diagramme" pour charger des exemples</li>
+        <li>✅ <strong>Validation en temps réel</strong> : Un ✅ vert indique que votre syntaxe est correcte</li>
+        <li>✅ <strong>Raccourci clavier</strong> : Ctrl+Enter pour générer avec l'IA</li>
+        <li>✅ <strong>Précisez le type</strong> : Commencez toujours votre prompt par le type de diagramme (Flowchart, Sequence, Class, State, ER, Gantt, etc.)</li>
+      </ul>
+    </div>
   </section>
+
+  <!-- Configuration -->
+  <section class="space-y-3">
+    <h3 class="text-2xl font-bold text-primary">Configuration</h3>
+    <div class="bg-gray-50 border border-gray-200 rounded-lg p-4">
+      <h5 class="font-bold mb-2">Paramètres Mistral AI</h5>
+      <ol class="list-decimal pl-5 space-y-1">
+        <li>Cliquez sur "Paramètres"</li>
+        <li>Entrez votre clé API Mistral</li>
+        <li>Testez la connexion</li>
+        <li>Sauvegardez</li>
+      </ol>
+      <div class="mt-3 bg-white border border-gray-300 rounded p-3">
+        <p class="font-semibold text-sm mb-2">Modèles recommandés :</p>
+        <ul class="list-disc pl-5 space-y-1 text-sm">
+          <li><code>mistral-large-latest</code> : Le plus puissant</li>
+          <li><code>mistral-medium-latest</code> : Bon équilibre</li>
+          <li><code>mistral-small-latest</code> : Rapide et économique</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- Support -->
+  <section class="space-y-3">
+    <h3 class="text-2xl font-bold text-primary">Support</h3>
+    <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
+      <p class="mb-3">Pour toute question ou problème :</p>
+      <ul class="space-y-2">
+        <li>📧 <strong>Email :</strong> <a href="mailto:sebastien.voerman@enovacom.com" class="text-blue-600 hover:underline">sebastien.voerman@enovacom.com</a></li>
+        <li>📚 <strong>Documentation Mermaid complète :</strong> <a href="https://mermaid.js.org" target="_blank" class="text-blue-600 hover:underline">https://mermaid.js.org</a></li>
+        <li>💡 <strong>Besoin d'aide ?</strong> Décrivez simplement ce que vous voulez, l'IA s'occupe du reste !</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- Footer message -->
+  <div class="text-center py-6 border-t border-gray-200">
+    <p class="text-lg font-bold text-primary">Vous êtes prêt à créer des diagrammes professionnels ! 🚀</p>
+  </div>
+
 </div>
 
     </div>
@@ -1364,5 +1430,27 @@ GAMME->>DPI: ADT^A01 (Création dossier patient)
       }
     }
   </script>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-gray-200 mt-12">
+    <div class="max-w-7xl mx-auto px-6 py-6">
+      <div class="flex flex-col md:flex-row justify-between items-center gap-4 text-sm text-gray-600">
+        <div class="flex items-center gap-2">
+          <span class="font-semibold text-primary">© 2025 Enovacom</span>
+          <span>•</span>
+          <span>Tous droits réservés</span>
+        </div>
+        <div class="flex flex-wrap justify-center gap-4">
+          <a href="#" class="hover:text-primary transition-colors">Mentions légales</a>
+          <span>•</span>
+          <a href="#" class="hover:text-primary transition-colors">Politique de confidentialité</a>
+          <span>•</span>
+          <a href="#" class="hover:text-primary transition-colors">Conditions d'utilisation</a>
+          <span>•</span>
+          <a href="#" class="hover:text-primary transition-colors">Contact</a>
+        </div>
+      </div>
+    </div>
+  </footer>
 </body>
 </html>
