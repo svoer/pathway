@@ -24,7 +24,6 @@ Règles :
 - Détecte type pertinent : flowchart, sequence, class, state, er, gantt.
 - Réponds **UNIQUEMENT** par un bloc de code Mermaid (sans prose/commentaires).
 - Identifiants sûrs (A, A1, a-b, etc.).
-- Labels FR si prompt FR.
 - Header YAML si pertinent :
 ---
 title: ...
@@ -33,6 +32,18 @@ title: ...
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/mentions-legales')
+def mentions_legales():
+    return render_template('mentions-legales.html')
+
+@app.route('/confidentialite')
+def confidentialite():
+    return render_template('confidentialite.html')
+
+@app.route('/conditions')
+def conditions():
+    return render_template('conditions.html')
 
 @app.route('/api/generate', methods=['POST'])
 def generate():
