@@ -335,20 +335,6 @@ Astuce : pour un rendu cohérent, pars d’un thème puis ajuste seulement la **
 
 ---
 
-## 🧪 Démo rapide (copier/coller)
-
-```mermaid
-sequenceDiagram
-  autonumber
-  participant Patient
-  participant GAM as GAM (Gestion Admission)
-  participant DPI as DPI (Dossier Patient Informatisé)
-  Patient->>GAM: ADT^A01 (Admission)
-  GAM->>DPI: ADT^A01 (Création dossier patient)
-```
-
----
-
 ## 🗺️ Architecture (très simple)
 
 * **Frontend** : HTML + Alpine.js + Mermaid v10 + Tailwind (CDN pour dev).
