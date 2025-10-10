@@ -13,38 +13,51 @@ En quelques secondes, tu peux obtenir :
 - 🏷️ **Class & Entity diagrams** – UML et bases de données
 - 🧠 **Mindmaps** – Brainstorming, organisation d’idées
 - 📈 **State diagrams** – États d’un système
-- 🎨 Et tout autre diagramme pris en charge par [Mermaid.js](https://mermaid.js.org/)
-
 👉 Tu décris ton besoin avec une phrase simple, l’IA fait le reste.
 
 ---
 
-## ⚡ Installation en 2 minutes
-Clone le repo (ou télécharge en ZIP) :
+## ⚡ Installation rapide
+
+### Prérequis
+- **Python 3.8+** : [Télécharger Python](https://www.python.org/downloads/)
+  - ⚠️ **Important lors de l'installation** : Cochez la case **"Add Python to PATH"** !
+- **Clé API Mistral AI** (personnelle) : [Obtenir une clé](https://console.mistral.ai)
+
+### Installation Windows (automatique)
 
 ```bash
-git clone https://github.com/svoer/pathway.git
+# 1. Cloner le repository
+git clone https://github.com/enovacom/pathway.git
 cd pathway
-````
 
-Installe les dépendances et lance l’app (Windows) :
-
-```bash
+# 2. Double-cliquer sur start.bat (ou lancer en ligne de commande)
 start.bat
 ```
 
----
+**C'est tout !** Le script `start.bat` fait automatiquement :
+- ✅ Création de l'environnement virtuel Python
+- ✅ Installation des dépendances (Flask, requests, python-dotenv)
+- ✅ Lancement de l'application
+- ✅ Ouverture automatique dans votre navigateur
 
-## ✨ Ce que tu peux faire
+L'application s'ouvre sur `http://127.0.0.1:5173`
 
-* **Générer** du Mermaid depuis un prompt (via API Mistral) ou écrire à la main.
-* **Prévisualiser** en direct le rendu.
-* **Thèmes** (15+ palettes) qui recolorisent **lignes, boîtes, acteurs, clusters, notes** et le **fond**.
-* **Personnaliser** la couleur principale & la police (Inter, Work Sans, Manrope, Montserrat, JetBrains Mono…).
-* **Dicter** ton prompt (Web Speech API, FR).
-* **Exporter** en **SVG** (vectoriel), **PNG** (fond transparent), **JPEG** (fond blanc).
+> 💡 **Astuce** : Si vous obtenez une erreur "Python n'est pas reconnu", c'est que Python n'est pas dans le PATH. Réinstallez Python en cochant "Add Python to PATH".
 
-> ⚠️ Par design, l’export **.mmd** n’est pas exposé dans l’UI (on garde le focus sur les rendus finaux).
+### Installation Linux/Mac
+
+```bash
+# Cloner le repository
+git clone https://github.com/enovacom/pathway.git
+cd pathway
+
+# Lancer le script d'installation
+chmod +x linux/start.sh
+./linux/start.sh
+```
+
+Le script fait tout automatiquement (environnement virtuel, dépendances, lancement).
 
 ---
 
