@@ -356,27 +356,9 @@ sequenceDiagram
 * **Exports** : SVG direct, PNG/JPEG via Canvas `toBlob`.
 * **Backend (optionnel)** : endpoints REST minces pour parler à l’API Mistral.
 
----
-
-## 📌 Roadmap (idées)
-
-* Palette **brand-lock** (verrouiller la couleur pour certains thèmes).
-* **Templates** réutilisables (snippets Mermaid prêts à l’emploi).
-* **Historique**/versions du code Mermaid.
-* **Import .mmd** (glisser-déposer).
-
----
-
-## 🤝 Contribuer
-
-PR bienvenues ! Style code : clair, minimal, compos discret.
-Design : sobre, “2025”, accessible (contrastes et tailles lisibles).
-
----
-
 ## 📄 Licence
 
-MIT — fais-toi plaisir ✌️
+MIT
 
 ---
 
