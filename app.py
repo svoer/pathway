@@ -8,6 +8,10 @@ load_dotenv()
 
 app = Flask(__name__)
 
+# Désactiver le cache des templates pour le développement
+app.config['TEMPLATES_AUTO_RELOAD'] = True
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
+
 # Configuration en mémoire
 config = {
     'mistral_base_url': os.getenv('MISTRAL_BASE_URL', 'https://api.mistral.ai'),
@@ -170,9 +174,10 @@ def is_valid_mermaid(text):
         r'stateDiagram',
         r'erDiagram',
         r'gantt',
-        r'pie\s+title',
+        r'pie\s+(title|showData)',
         r'graph\s+(TD|LR|TB|RL|BT)',
         r'journey',
+        r'gitGraph',
         r'gitgraph'
     ]
     
@@ -272,11 +277,18 @@ def update_mistral_settings():
     try:
         data = request.json
         
+        # Mettre à jour la config en mémoire
         if 'base_url' in data:
             config['mistral_base_url'] = data['base_url'].rstrip('/')
             
         if 'api_key' in data:
             config['mistral_api_key'] = data['api_key']
+        
+        # Persister dans le fichier .env
+        update_env_file({
+            'MISTRAL_BASE_URL': config['mistral_base_url'],
+            'MISTRAL_API_KEY': config['mistral_api_key']
+        })
             
         return jsonify({
             'success': True,
@@ -287,10 +299,47 @@ def update_mistral_settings():
     except Exception as e:
         return jsonify({'error': f'Erreur lors de la mise à jour: {str(e)}'}), 500
 
+def update_env_file(updates):
+    """Met à jour le fichier .env avec les nouvelles valeurs"""
+    env_path = os.path.join(os.path.dirname(__file__), '.env')
+    
+    # Lire le fichier .env existant
+    env_vars = {}
+    if os.path.exists(env_path):
+        with open(env_path, 'r', encoding='utf-8') as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith('#') and '=' in line:
+                    key, value = line.split('=', 1)
+                    env_vars[key.strip()] = value.strip()
+    
+    # Mettre à jour avec les nouvelles valeurs
+    env_vars.update(updates)
+    
+    # Réécrire le fichier .env
+    with open(env_path, 'w', encoding='utf-8') as f:
+        f.write('# Configuration Mistral AI\n')
+        for key, value in env_vars.items():
+            f.write(f'{key}={value}\n')
+    
+    print(f'✅ Fichier .env mis à jour : {list(updates.keys())}')
+
 if __name__ == '__main__':
+    import webbrowser
+    import threading
+    
     host = os.getenv('HOST', '127.0.0.1')
     port = int(os.getenv('PORT', 5173))
     debug = os.getenv('FLASK_DEBUG', 'False').lower() == 'true'
+    url = f"http://{host}:{port}"
     
-    print(f"🚀 Mermaid Flask AI démarré sur http://{host}:{port}")
+    print(f" Mermaid Flask AI démarré sur {url}")
+    
+    # Ouvrir le navigateur automatiquement après 1.5 secondes
+    def open_browser():
+        import time
+        time.sleep(1.5)
+        webbrowser.open(url)
+    
+    threading.Thread(target=open_browser, daemon=True).start()
     app.run(host=host, port=port, debug=debug)
