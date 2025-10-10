@@ -16,7 +16,44 @@ family=Inter:wght@400;600;800&
 family=Work+Sans:wght@400;600;700&
 family=Manrope:wght@400;600;700&
 family=Montserrat:wght@500;700&
-family=JetBrains+Mono:wght@600;700&display=swap" />
+family=JetBrains+Mono:wght@600;700&
+family=Roboto:wght@400;500;700&
+family=Open+Sans:wght@400;600;700&
+family=Lato:wght@400;700&
+family=Poppins:wght@400;600;700&
+family=Nunito:wght@400;600;800&
+family=Raleway:wght@400;600;700&
+family=Ubuntu:wght@400;500;700&
+family=Playfair+Display:wght@400;700&
+family=Merriweather:wght@400;700&
+family=Source+Code+Pro:wght@400;600&
+family=Fira+Code:wght@400;600&
+family=Courier+Prime:wght@400;700&
+family=Space+Mono:wght@400;700&
+family=Quicksand:wght@400;600;700&
+family=Comfortaa:wght@400;600;700&
+family=Pacifico&
+family=Lobster&
+family=Dancing+Script:wght@400;700&
+family=Righteous&
+family=Permanent+Marker&
+family=Bebas+Neue&
+family=Oswald:wght@400;600&
+family=Indie+Flower&
+family=Shadows+Into+Light&
+family=Caveat:wght@400;700&
+family=Archivo:wght@400;600;700&
+family=Barlow:wght@400;600;700&
+family=DM+Sans:wght@400;500;700&
+family=Exo+2:wght@400;600;700&
+family=Karla:wght@400;600;700&
+family=Outfit:wght@400;600;700&
+family=Plus+Jakarta+Sans:wght@400;600;700&
+family=Sora:wght@400;600;700&
+family=Space+Grotesk:wght@400;600;700&
+family=Lexend:wght@400;600;700&
+family=Red+Hat+Display:wght@400;600;700&
+family=Figtree:wght@400;600;700&display=swap" />
 
   <style>
     [x-cloak]{display:none!important;}
@@ -134,79 +171,269 @@ family=JetBrains+Mono:wght@600;700&display=swap" />
 
   <!-- Main -->
   <main class="max-w-7xl mx-auto px-6 py-8">
-    <div class="container-main grid grid-cols-1 xl:grid-cols-4 gap-8">
-      <!-- Sidebar -->
-      <aside class="sidebar xl:col-span-1">
-        <div class="neo-card">
-          <div class="neo-card-header"><h2 class="section-title">Prompt IA</h2></div>
-          <div class="px-6 pb-6">
-            <textarea x-model="prompt" :class="['neo-input resize-none h-32 mb-4', isRecording ? 'ring-2 ring-rose-500' : '']" :placeholder="(isRecording ? 'Parlez… la dictée est en cours 🎤' : 'Décrivez le diagramme que vous voulez créer...')"></textarea>
-            <div class="flex gap-2">
-              <button @click="generate()" :disabled="loading || !prompt.trim()" class="neo-btn neo-btn-primary w-full" title="Générer le diagramme">
-                <span x-show="!loading">Générer</span><span x-show="loading">Génération…</span>
+    <div class="container-main space-y-6">
+      <!-- Prompt IA - CENTRÉ EN HAUT -->
+      <section class="neo-card">
+        <div class="neo-card-header" style="padding: 0.75rem 1rem;"><h2 class="section-title text-base">Générer avec l'IA</h2></div>
+        <div class="px-4 pb-4">
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-3">
+            <div class="lg:col-span-10">
+              <textarea x-model="prompt" :class="['neo-input resize-none h-24 mb-0', isRecording ? 'ring-2 ring-rose-500' : '']" style="font-size: 0.9rem; padding: 0.6rem 0.8rem;" :placeholder="(isRecording ? 'Parlez… la dictée est en cours 🎤' : 'Décrivez le diagramme que vous voulez créer...')"></textarea>
+            </div>
+            <div class="lg:col-span-2 flex flex-col gap-2">
+              <button @click="generate()" :disabled="loading || !prompt.trim()" class="neo-btn neo-btn-primary flex-1" style="min-height: 44px;" title="Générer le diagramme (Ctrl+Enter)">
+                <span x-show="!loading">✨ Générer</span><span x-show="loading">⏳ Génération…</span>
               </button>
-              <button @click="toggleDictation()" class="neo-btn neo-btn-icon" :class="{'is-recording': isRecording}" :title="isRecording ? 'Arrêter la dictée' : 'Dicter'}" aria-label="Dictée">
-                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor"><path d="M12 14a3 3 0 0 0 3-3V6a3 3 0 0 0-6 0v5a3 3 0 0 0 3 3Zm5-3a5 5 0 0 1-10 0H5a7 7 0 0 0 14 0h-2Zm-5 7a7 7 0 0 1-7-7H3a9 9 0 0 0 18 0h-2a7 7 0 0 1-7 7Zm-1 2h2v2h-2v-2Z"/></svg>
-              </button>
+              <button @click="toggleDictation()" class="neo-btn flex-1" :class="{'is-recording': isRecording}" :title="isRecording ? 'Arrêter la dictée' : 'Dicter'" aria-label="Dictée" style="min-height: 44px;">
+                  🎤
+                </button>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Historique des prompts -->
+          <div x-show="promptHistory.length > 0" class="mt-3 pt-3 border-t border-gray-200">
+            <div class="flex items-center justify-between mb-2">
+              <span class="text-xs font-semibold text-gray-600">📜 Historique (10 derniers)</span>
+              <button @click="clearHistory()" class="text-xs text-red-600 hover:text-red-700 font-medium">🗑️ Effacer</button>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <template x-for="(p, index) in promptHistory" :key="index">
+                <button @click="loadFromHistory(p)" class="text-xs px-2 py-1 bg-gray-100 hover:bg-gray-200 rounded border border-gray-300 transition-colors max-w-xs truncate" :title="p" x-text="p.substring(0, 50) + (p.length > 50 ? '...' : '')"></button>
+              </template>
             </div>
           </div>
         </div>
-      </aside>
+      </section>
 
-      <!-- Content -->
-      <div class="main-content xl:col-span-3 space-y-8">
-        <!-- Éditeur -->
-        <section class="neo-card">
-          <div class="neo-card-header"><h2 class="section-title">Éditeur de code Mermaid</h2></div>
-          <div class="px-6 pb-6">
-            <textarea x-model="mermaidCode" @input="debouncedRender()" class="neo-input font-mono text-sm resize-vertical h-48 mb-4" placeholder="Tapez votre code Mermaid ici..."></textarea>
-            <div class="text-sm">
-              <span x-show="lastError" class="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-red-50 text-red-700 border border-red-200">❌ <span x-text="lastError"></span></span>
-              <span x-show="!lastError && mermaidCode" class="inline-flex items-center gap-2 px-2.5 py-1 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200">✅ Syntaxe OK</span>
+      <!-- Éditeur de code Mermaid -->
+      <section class="neo-card">
+        <div class="neo-card-header" style="padding: 0.75rem 1rem;"><h2 class="section-title text-base">Éditeur de code Mermaid</h2></div>
+        <div class="px-4 pb-4">
+          <textarea x-model="mermaidCode" @input="debouncedRender()" class="neo-input font-mono resize-vertical h-32 mb-3" style="font-size: 0.85rem; padding: 0.6rem 0.8rem;" placeholder="Tapez votre code Mermaid ici..."></textarea>
+          <div class="text-xs">
+            <span x-show="lastError" class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-red-50 text-red-700 border border-red-200">❌ <span x-text="lastError"></span></span>
+            <span x-show="!lastError && mermaidCode" class="inline-flex items-center gap-1 px-2 py-1 rounded-md bg-emerald-50 text-emerald-700 border border-emerald-200">✅ Syntaxe OK</span>
+          </div>
+        </div>
+      </section>
+
+        <!-- Toolbar ligne 1 : Thème + Couleurs -->
+        <section class="bg-white/60 border border-gray-200 rounded-2xl p-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-4">
+            <!-- Thème -->
+            <div>
+              <label class="font-semibold block mb-1 text-sm">Thème</label>
+              <select x-model="theme" @change="applyTheme()" class="neo-input neo-select" style="padding: 0.5rem 0.75rem; font-size: 0.85rem;">
+                <optgroup label="Professionnels">
+                  <template x-for="t in availableThemes.filter(th => th.category === 'pro')" :key="t.id"><option :value="t.id" x-text="t.name"></option></template>
+                </optgroup>
+                <optgroup label="Sombres">
+                  <template x-for="t in availableThemes.filter(th => th.category === 'dark')" :key="t.id"><option :value="t.id" x-text="t.name"></option></template>
+                </optgroup>
+                <optgroup label="Bleus">
+                  <template x-for="t in availableThemes.filter(th => th.category === 'blue')" :key="t.id"><option :value="t.id" x-text="t.name"></option></template>
+                </optgroup>
+                <optgroup label="Verts">
+                  <template x-for="t in availableThemes.filter(th => th.category === 'green')" :key="t.id"><option :value="t.id" x-text="t.name"></option></template>
+                </optgroup>
+                <optgroup label="Roses & Rouges">
+                  <template x-for="t in availableThemes.filter(th => th.category === 'pink')" :key="t.id"><option :value="t.id" x-text="t.name"></option></template>
+                </optgroup>
+                <optgroup label="Violets">
+                  <template x-for="t in availableThemes.filter(th => th.category === 'purple')" :key="t.id"><option :value="t.id" x-text="t.name"></option></template>
+                </optgroup>
+                <optgroup label="Chauds & Vifs">
+                  <template x-for="t in availableThemes.filter(th => th.category === 'warm')" :key="t.id"><option :value="t.id" x-text="t.name"></option></template>
+                </optgroup>
+              </select>
+            </div>
+
+            <!-- Couleur Bordure -->
+            <div>
+              <label class="font-semibold block mb-1 text-sm">Bordure</label>
+              <div class="flex items-center gap-2">
+                <input type="color" x-model="borderColor" @input="updateColors()" class="w-10 h-8 border border-gray-300 rounded cursor-pointer" title="Couleur bordure"/>
+                <select x-model="borderColor" @change="updateColors()" class="neo-input neo-select flex-1" style="padding: 0.4rem 0.6rem; font-size: 0.8rem;">
+                  <optgroup label="Couleurs vives">
+                    <option value="#EF4444">🔴 Rouge</option>
+                    <option value="#F97316">🟠 Orange</option>
+                    <option value="#F59E0B">🟡 Ambre</option>
+                    <option value="#EAB308">🟡 Jaune</option>
+                    <option value="#84CC16">🟢 Citron</option>
+                    <option value="#22C55E">🟢 Vert</option>
+                    <option value="#10B981">🟢 Émeraude</option>
+                    <option value="#14B8A6">🔵 Turquoise</option>
+                    <option value="#06B6D4">🔵 Cyan</option>
+                    <option value="#0EA5E9">🔵 Bleu ciel</option>
+                    <option value="#3B82F6">🔵 Bleu</option>
+                    <option value="#6366F1">🟣 Indigo</option>
+                    <option value="#8B5CF6">🟣 Violet</option>
+                    <option value="#A855F7">🟣 Pourpre</option>
+                    <option value="#D946EF">🟣 Fuchsia</option>
+                    <option value="#EC4899">🔴 Rose</option>
+                  </optgroup>
+                  <optgroup label="Couleurs professionnelles">
+                    <option value="#0C4A45">🏛️ Enovacom</option>
+                    <option value="#1E3A8A">💼 Bleu marine</option>
+                    <option value="#1E40AF">💼 Bleu royal</option>
+                    <option value="#7C3AED">👑 Violet pro</option>
+                    <option value="#BE185D">🌹 Rose pro</option>
+                    <option value="#9F1239">🍷 Bordeaux</option>
+                    <option value="#065F46">🌲 Forêt</option>
+                    <option value="#0F766E">🌊 Océan</option>
+                  </optgroup>
+                  <optgroup label="Couleurs neutres">
+                    <option value="#6B7280">⚪ Gris</option>
+                    <option value="#4B5563">⚫ Gris foncé</option>
+                    <option value="#1F2937">⚫ Charbon</option>
+                    <option value="#111827">⚫ Noir</option>
+                  </optgroup>
+                </select>
+              </div>
+            </div>
+
+            <!-- Couleur Remplissage -->
+            <div>
+              <label class="font-semibold block mb-1 text-sm">Remplissage</label>
+              <div class="flex items-center gap-2">
+                <input type="color" x-model="fillColor" @input="updateColors()" class="w-10 h-8 border border-gray-300 rounded cursor-pointer" title="Couleur remplissage"/>
+                <select x-model="fillColor" @change="updateColors()" class="neo-input neo-select flex-1" style="padding: 0.4rem 0.6rem; font-size: 0.8rem;">
+                  <optgroup label="Couleurs vives">
+                    <option value="#FEE2E2">🔴 Rouge clair</option>
+                    <option value="#FFEDD5">🟠 Orange clair</option>
+                    <option value="#FEF3C7">🟡 Jaune clair</option>
+                    <option value="#ECFCCB">🟢 Citron clair</option>
+                    <option value="#D1FAE5">🟢 Vert clair</option>
+                    <option value="#CCFBF1">🔵 Turquoise clair</option>
+                    <option value="#DBEAFE">🔵 Bleu clair</option>
+                    <option value="#E0E7FF">🟣 Indigo clair</option>
+                    <option value="#EDE9FE">🟣 Violet clair</option>
+                    <option value="#FCE7F3">🔴 Rose clair</option>
+                  </optgroup>
+                  <optgroup label="Couleurs neutres">
+                    <option value="#F9FAFB">⚪ Gris très clair</option>
+                    <option value="#F3F4F6">⚪ Gris clair</option>
+                    <option value="#E5E7EB">⚪ Gris moyen</option>
+                    <option value="#FFFFFF">⚪ Blanc</option>
+                  </optgroup>
+                  <optgroup label="Couleurs professionnelles">
+                    <option value="#E8F5F4">🔵 Bleu ciel</option>
+                    <option value="#F1F5F9">💼 Graphite clair</option>
+                    <option value="#F8FAFC">🪨 Ardoise clair</option>
+                    <option value="#FEF9C3">🟡 Jaune</option>
+                    <option value="#ECFDF5">💚 Émeraude clair</option>
+                  </optgroup>
+                </select>
+              </div>
+            </div>
+
+            <!-- Couleur Texte -->
+            <div>
+              <label class="font-semibold block mb-1 text-sm">Texte</label>
+              <div class="flex items-center gap-2">
+                <input type="color" x-model="textColor" @input="updateColors()" class="w-10 h-8 border border-gray-300 rounded cursor-pointer" title="Couleur texte"/>
+                <select x-model="textColor" @change="updateColors()" class="neo-input neo-select flex-1" style="padding: 0.4rem 0.6rem; font-size: 0.8rem;">
+                  <optgroup label="Textes foncés">
+                    <option value="#111827">⚫ Noir</option>
+                    <option value="#1F2937">⚫ Gris très foncé</option>
+                    <option value="#374151">⚫ Gris foncé</option>
+                    <option value="#4B5563">⚫ Gris moyen</option>
+                  </optgroup>
+                  <optgroup label="Textes clairs">
+                    <option value="#F9FAFB">⚪ Blanc cassé</option>
+                    <option value="#FFFFFF">⚪ Blanc</option>
+                    <option value="#E5E7EB">⚪ Gris clair</option>
+                  </optgroup>
+                </select>
+              </div>
             </div>
           </div>
         </section>
 
-        <!-- Toolbar -->
-        <section class="bg-white/60 border border-gray-200 rounded-2xl p-6">
-          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-6">
-            <!-- Thème -->
-            <div>
-              <label class="font-semibold block mb-2">Thème</label>
-              <select x-model="theme" @change="applyTheme(); renderMermaid()" class="neo-input neo-select">
-                <template x-for="t in availableThemes" :key="t.id"><option :value="t.id" x-text="t.name"></option></template>
-              </select>
-            </div>
-
-            <!-- Couleur -->
-            <div>
-              <label class="font-semibold block mb-2">Couleur</label>
-              <div class="flex items-center gap-2">
-                <input type="color" x-model="primaryColor" @input="updateColors(); renderMermaid()" class="w-12 h-10 border border-gray-300 rounded" title="Couleur des lignes"/>
-                <span class="text-xs text-gray-500 font-mono" x-text="primaryColor"></span>
-              </div>
-            </div>
-
+        <!-- Toolbar ligne 2 : Police et Taille -->
+        <section class="bg-white/60 border border-gray-200 rounded-2xl p-4">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <!-- Police -->
             <div>
-              <label class="font-semibold block mb-2">Police</label>
-              <select x-model="fontFamily" @change="onFontChange()" class="neo-input neo-select">
-                <option value="Inter, sans-serif">Inter</option>
-                <option value="'Work Sans', sans-serif">Work Sans</option>
-                <option value="Manrope, sans-serif">Manrope</option>
-                <option value="Montserrat, sans-serif">Montserrat</option>
-                <option value="'JetBrains Mono', monospace">JetBrains Mono (mono)</option>
+              <label class="font-semibold block mb-1 text-sm">Police</label>
+              <select x-model="fontFamily" @change="onFontChange()" class="neo-input neo-select font-preview-select" style="padding: 0.5rem 0.75rem; font-size: 0.85rem;">
+                <optgroup label="Sans-serif modernes">
+                  <option value="Inter, sans-serif" style="font-family: Inter, sans-serif;">Inter</option>
+                  <option value="Roboto, sans-serif" style="font-family: Roboto, sans-serif;">Roboto</option>
+                  <option value="'Open Sans', sans-serif" style="font-family: 'Open Sans', sans-serif;">Open Sans</option>
+                  <option value="Lato, sans-serif" style="font-family: Lato, sans-serif;">Lato</option>
+                  <option value="Poppins, sans-serif" style="font-family: Poppins, sans-serif;">Poppins</option>
+                  <option value="Nunito, sans-serif" style="font-family: Nunito, sans-serif;">Nunito</option>
+                  <option value="Raleway, sans-serif" style="font-family: Raleway, sans-serif;">Raleway</option>
+                  <option value="Ubuntu, sans-serif" style="font-family: Ubuntu, sans-serif;">Ubuntu</option>
+                </optgroup>
+                <optgroup label="Design & Style">
+                  <option value="'Work Sans', sans-serif" style="font-family: 'Work Sans', sans-serif;">Work Sans</option>
+                  <option value="Manrope, sans-serif" style="font-family: Manrope, sans-serif;">Manrope</option>
+                  <option value="Montserrat, sans-serif" style="font-family: Montserrat, sans-serif;">Montserrat</option>
+                  <option value="Quicksand, sans-serif" style="font-family: Quicksand, sans-serif;">Quicksand</option>
+                  <option value="Comfortaa, sans-serif" style="font-family: Comfortaa, sans-serif;">Comfortaa</option>
+                  <option value="Bebas Neue, sans-serif" style="font-family: 'Bebas Neue', sans-serif;">Bebas Neue</option>
+                  <option value="Oswald, sans-serif" style="font-family: Oswald, sans-serif;">Oswald</option>
+                  <option value="Righteous, sans-serif" style="font-family: Righteous, sans-serif;">Righteous</option>
+                </optgroup>
+                <optgroup label="Professionnelles Modernes">
+                  <option value="'DM Sans', sans-serif" style="font-family: 'DM Sans', sans-serif;">DM Sans</option>
+                  <option value="'Plus Jakarta Sans', sans-serif" style="font-family: 'Plus Jakarta Sans', sans-serif;">Plus Jakarta Sans</option>
+                  <option value="Sora, sans-serif" style="font-family: Sora, sans-serif;">Sora</option>
+                  <option value="'Space Grotesk', sans-serif" style="font-family: 'Space Grotesk', sans-serif;">Space Grotesk</option>
+                  <option value="Lexend, sans-serif" style="font-family: Lexend, sans-serif;">Lexend</option>
+                  <option value="Outfit, sans-serif" style="font-family: Outfit, sans-serif;">Outfit</option>
+                  <option value="Figtree, sans-serif" style="font-family: Figtree, sans-serif;">Figtree</option>
+                  <option value="Archivo, sans-serif" style="font-family: Archivo, sans-serif;">Archivo</option>
+                  <option value="Barlow, sans-serif" style="font-family: Barlow, sans-serif;">Barlow</option>
+                  <option value="'Exo 2', sans-serif" style="font-family: 'Exo 2', sans-serif;">Exo 2</option>
+                  <option value="Karla, sans-serif" style="font-family: Karla, sans-serif;">Karla</option>
+                  <option value="'Red Hat Display', sans-serif" style="font-family: 'Red Hat Display', sans-serif;">Red Hat Display</option>
+                </optgroup>
+                <optgroup label="Serif (classique)">
+                  <option value="'Playfair Display', serif" style="font-family: 'Playfair Display', serif;">Playfair Display</option>
+                  <option value="Merriweather, serif" style="font-family: Merriweather, serif;">Merriweather</option>
+                </optgroup>
+                <optgroup label="Fantaisie & Fun">
+                  <option value="Pacifico, cursive" style="font-family: Pacifico, cursive;">Pacifico</option>
+                  <option value="Lobster, cursive" style="font-family: Lobster, cursive;">Lobster</option>
+                  <option value="'Dancing Script', cursive" style="font-family: 'Dancing Script', cursive;">Dancing Script</option>
+                  <option value="'Permanent Marker', cursive" style="font-family: 'Permanent Marker', cursive;">Permanent Marker</option>
+                  <option value="'Indie Flower', cursive" style="font-family: 'Indie Flower', cursive;">Indie Flower</option>
+                  <option value="'Shadows Into Light', cursive" style="font-family: 'Shadows Into Light', cursive;">Shadows Into Light</option>
+                  <option value="Caveat, cursive" style="font-family: Caveat, cursive;">Caveat</option>
+                </optgroup>
+                <optgroup label="Monospace (code)">
+                  <option value="'JetBrains Mono', monospace" style="font-family: 'JetBrains Mono', monospace;">JetBrains Mono</option>
+                  <option value="'Source Code Pro', monospace" style="font-family: 'Source Code Pro', monospace;">Source Code Pro</option>
+                  <option value="'Fira Code', monospace" style="font-family: 'Fira Code', monospace;">Fira Code</option>
+                  <option value="'Courier Prime', monospace" style="font-family: 'Courier Prime', monospace;">Courier Prime</option>
+                  <option value="'Space Mono', monospace" style="font-family: 'Space Mono', monospace;">Space Mono</option>
+                </optgroup>
               </select>
             </div>
 
-            <!-- Exports -->
+            <!-- Taille Police -->
             <div>
-              <label class="font-semibold block mb-2">Export</label>
-              <div class="export-grid">
-                <button @click="exportSvg()" class="export-tile" aria-label="Exporter en SVG" title="Exporter en SVG">SVG</button>
-                <button @click="exportPng()" class="export-tile" aria-label="Exporter en PNG (transparent)" title="Exporter en PNG">PNG</button>
-                <button @click="exportJpeg()" class="export-tile" aria-label="Exporter en JPEG" title="Exporter en JPEG">JPEG</button>
+              <label class="font-semibold block mb-1 text-sm">Taille Police</label>
+              <div class="flex items-center gap-2">
+                <input type="range" x-model="fontSize" @input="onFontChange()" min="10" max="28" step="1" class="flex-1" title="Ajuster la taille de police" />
+                <span class="text-sm font-mono w-16 text-center font-semibold" x-text="fontSize + 'px'"></span>
               </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Toolbar ligne 3 : Exports -->
+        <section class="bg-white/60 border border-gray-200 rounded-2xl p-4">
+          <div class="flex items-center gap-4">
+            <label class="font-semibold text-sm">Export</label>
+            <div class="flex gap-2 flex-1">
+              <button @click="exportSvg()" class="export-tile flex-1" style="height: 48px; font-size: 0.9rem;" aria-label="Exporter en SVG" title="Exporter en SVG">SVG</button>
+              <button @click="exportPng()" class="export-tile flex-1" style="height: 48px; font-size: 0.9rem;" aria-label="Exporter en PNG (transparent)" title="Exporter en PNG">PNG</button>
+              <button @click="exportJpeg()" class="export-tile flex-1" style="height: 48px; font-size: 0.9rem;" aria-label="Exporter en JPEG" title="Exporter en JPEG">JPEG</button>
             </div>
           </div>
         </section>
@@ -243,11 +470,14 @@ family=JetBrains+Mono:wght@600;700&display=swap" />
   <!-- Aide -->
   <div x-show="showHelp" x-cloak class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" @click.self="showHelp = false">
     <div class="bg-white border border-gray-200 rounded-2xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-      <div class="sticky top-0 bg-white border-b p-6 rounded-t-2xl flex justify-between items-center">
-        <h3 class="text-2xl font-bold">Aide Mermaid – Raccourci</h3>
-        <button @click="showHelp = false" class="neo-btn neo-btn-icon" title="Fermer"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
+      <div class="sticky top-0 bg-white border-b p-6 rounded-t-2xl flex justify-between items-center" style="background: linear-gradient(135deg, #0C4A45 0%, #0f5650 100%);">
+        <div>
+          <h3 class="text-2xl font-bold text-white">📚 Guide Complet - Enovacom Pathway</h3>
+          <p class="text-white/80 text-sm mt-1">Créez des diagrammes professionnels en quelques clics</p>
+        </div>
+        <button @click="showHelp = false" class="neo-btn neo-btn-icon bg-white/20 hover:bg-white/30 text-white border-white/30" title="Fermer"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
       </div>
-      <div class="p-8 space-y-10 text-sm text-gray-800">
+      <div class="p-8 space-y-8 text-sm text-gray-800">
   <!-- Intro -->
   <section class="space-y-3">
     <h3 class="text-xl font-bold">Guide rapide Mermaid</h3>
@@ -433,6 +663,7 @@ family=JetBrains+Mono:wght@600;700&display=swap" />
     function app(){
       return {
         prompt:'',
+        promptHistory:[], // Historique des 10 derniers prompts
         mermaidCode:`sequenceDiagram
 autonumber
 participant Patient
@@ -444,30 +675,56 @@ GAMME->>DPI: ADT^A01 (Création dossier patient)
         models:[], selectedModel:'', loading:false, loadingModels:false, lastError:'',
         showSettings:false, showHelp:false,
 
-        // Visuels
+        // Visuels - VALEURS PAR DÉFAUT (Enovacom + Poppins)
         theme:'enovacom',
         primaryColor:'#0C4A45',
-        fontFamily:"'Work Sans', sans-serif",
-        fontSize:14, // taille fixée
+        fillColor:'#E8F5F4',      // Couleur de remplissage des éléments
+        borderColor:'#0C4A45',     // Couleur des bordures
+        textColor:'#0e1f1c',       // Couleur du texte
+        fontFamily:"Poppins, sans-serif",  // Police par défaut : Poppins
+        fontSize:16, // Taille par défaut plus lisible
         isRecording:false, recognition:null,
 
-        // Thèmes riches (couleur des boîtes + fond canvas)
+        // Thèmes riches (couleur des boîtes + fond canvas) - Organisés par catégories
         availableThemes:[
-          {id:'enovacom',name:'Enovacom', stroke:'#0C4A45', boxBg:'#E8F5F4', boxBorder:'#0C4A45', boxText:'#0e1f1c', canvasBg:'#ffffff'},
-          {id:'midnight',name:'Midnight',  stroke:'#8B5CF6', boxBg:'#1f2937', boxBorder:'#8B5CF6', boxText:'#ffffff', canvasBg:'#0F172A', dark:true},
-          {id:'graphite',name:'Graphite',  stroke:'#334155', boxBg:'#F1F5F9', boxBorder:'#334155', boxText:'#0F172A', canvasBg:'#ffffff'},
-          {id:'ocean',   name:'Océan',     stroke:'#0EA5E9', boxBg:'#ECFEFF', boxBorder:'#0EA5E9', boxText:'#083344', canvasBg:'#F0FAFF'},
-          {id:'emerald', name:'Émeraude',  stroke:'#10B981', boxBg:'#ECFDF5', boxBorder:'#10B981', boxText:'#064E3B', canvasBg:'#ffffff'},
-          {id:'rose',    name:'Quartz Rose',stroke:'#E11D48', boxBg:'#FFF1F2', boxBorder:'#E11D48', boxText:'#881337', canvasBg:'#ffffff'},
-          {id:'amber',   name:'Ambre',     stroke:'#F59E0B', boxBg:'#FFFBEB', boxBorder:'#F59E0B', boxText:'#78350F', canvasBg:'#ffffff'},
-          {id:'violet',  name:'Violet',    stroke:'#7C3AED', boxBg:'#F5F3FF', boxBorder:'#7C3AED', boxText:'#4C1D95', canvasBg:'#ffffff'},
-          {id:'cyan',    name:'Cyan',      stroke:'#06B6D4', boxBg:'#ECFEFF', boxBorder:'#06B6D4', boxText:'#164E63', canvasBg:'#ffffff'},
-          {id:'lime',    name:'Citron Vert', stroke:'#84CC16', boxBg:'#F7FEE7', boxBorder:'#84CC16', boxText:'#365314', canvasBg:'#ffffff'},
-          {id:'sand',    name:'Sable',     stroke:'#D97706', boxBg:'#FFFBEB', boxBorder:'#D97706', boxText:'#451A03', canvasBg:'#FFF7ED'},
-          {id:'lavender',name:'Lavande',   stroke:'#8B5CF6', boxBg:'#F5F3FF', boxBorder:'#8B5CF6', boxText:'#4C1D95', canvasBg:'#ffffff'},
-          {id:'neutral', name:'Neutre',    stroke:'#6B7280', boxBg:'#F9FAFB', boxBorder:'#6B7280', boxText:'#374151', canvasBg:'#ffffff'},
-          {id:'forest',  name:'Forêt',     stroke:'#065F46', boxBg:'#ECFDF5', boxBorder:'#065F46', boxText:'#064E3B', canvasBg:'#ffffff'},
-          {id:'ink',     name:'Encre',     stroke:'#111827', boxBg:'#F3F4F6', boxBorder:'#111827', boxText:'#111827', canvasBg:'#ffffff'}
+          // Thèmes Clairs Professionnels
+          {id:'enovacom',name:'🏛️ Enovacom', stroke:'#0C4A45', boxBg:'#E8F5F4', boxBorder:'#0C4A45', boxText:'#0e1f1c', canvasBg:'#ffffff', category:'pro'},
+          {id:'graphite',name:'💼 Graphite',  stroke:'#334155', boxBg:'#F1F5F9', boxBorder:'#334155', boxText:'#0F172A', canvasBg:'#ffffff', category:'pro'},
+          {id:'neutral', name:'⚪ Neutre',    stroke:'#6B7280', boxBg:'#F9FAFB', boxBorder:'#6B7280', boxText:'#374151', canvasBg:'#ffffff', category:'pro'},
+          {id:'ink',     name:'🖊️ Encre',     stroke:'#111827', boxBg:'#F3F4F6', boxBorder:'#111827', boxText:'#111827', canvasBg:'#ffffff', category:'pro'},
+          {id:'slate',   name:'🪨 Ardoise',   stroke:'#475569', boxBg:'#F8FAFC', boxBorder:'#475569', boxText:'#1E293B', canvasBg:'#ffffff', category:'pro'},
+          
+          // Thèmes Sombres
+          {id:'midnight',name:'🌙 Midnight',  stroke:'#8B5CF6', boxBg:'#1f2937', boxBorder:'#8B5CF6', boxText:'#F3F4F6', canvasBg:'#0F172A', dark:true, category:'dark'},
+          {id:'darkblue',name:'🌌 Bleu Nuit', stroke:'#3B82F6', boxBg:'#1E293B', boxBorder:'#3B82F6', boxText:'#E2E8F0', canvasBg:'#0F172A', dark:true, category:'dark'},
+          {id:'carbon',  name:'⚫ Carbone',    stroke:'#10B981', boxBg:'#1F2937', boxBorder:'#10B981', boxText:'#F9FAFB', canvasBg:'#111827', dark:true, category:'dark'},
+          {id:'purple',  name:'💜 Pourpre',   stroke:'#A855F7', boxBg:'#1E1B4B', boxBorder:'#A855F7', boxText:'#E9D5FF', canvasBg:'#0F0A1F', dark:true, category:'dark'},
+          
+          // Thèmes Bleus & Verts
+          {id:'ocean',   name:'🌊 Océan',     stroke:'#0EA5E9', boxBg:'#ECFEFF', boxBorder:'#0EA5E9', boxText:'#083344', canvasBg:'#F0FAFF', category:'blue'},
+          {id:'cyan',    name:'💎 Cyan',      stroke:'#06B6D4', boxBg:'#ECFEFF', boxBorder:'#06B6D4', boxText:'#164E63', canvasBg:'#ffffff', category:'blue'},
+          {id:'sky',     name:'☁️ Ciel',       stroke:'#0284C7', boxBg:'#E0F2FE', boxBorder:'#0284C7', boxText:'#075985', canvasBg:'#F0F9FF', category:'blue'},
+          {id:'emerald', name:'💚 Émeraude',  stroke:'#10B981', boxBg:'#ECFDF5', boxBorder:'#10B981', boxText:'#064E3B', canvasBg:'#ffffff', category:'green'},
+          {id:'forest',  name:'🌲 Forêt',     stroke:'#065F46', boxBg:'#ECFDF5', boxBorder:'#065F46', boxText:'#064E3B', canvasBg:'#ffffff', category:'green'},
+          {id:'lime',    name:'🍋 Citron',     stroke:'#84CC16', boxBg:'#F7FEE7', boxBorder:'#84CC16', boxText:'#365314', canvasBg:'#ffffff', category:'green'},
+          {id:'mint',    name:'🍃 Menthe',     stroke:'#14B8A6', boxBg:'#F0FDFA', boxBorder:'#14B8A6', boxText:'#134E4A', canvasBg:'#ffffff', category:'green'},
+          
+          // Thèmes Roses & Rouges - Couleurs plus variées
+          {id:'rose',    name:'🌹 Rose',       stroke:'#E11D48', boxBg:'#FFE4E6', boxBorder:'#E11D48', boxText:'#881337', canvasBg:'#ffffff', category:'pink'},
+          {id:'pink',    name:'💖 Fuchsia',    stroke:'#EC4899', boxBg:'#FCE7F3', boxBorder:'#EC4899', boxText:'#831843', canvasBg:'#ffffff', category:'pink'},
+          {id:'magenta', name:'💜 Magenta',    stroke:'#D946EF', boxBg:'#FAE8FF', boxBorder:'#D946EF', boxText:'#701A75', canvasBg:'#ffffff', category:'pink'},
+          
+          // Thèmes Violets
+          {id:'violet',  name:'💜 Violet',    stroke:'#7C3AED', boxBg:'#F5F3FF', boxBorder:'#7C3AED', boxText:'#4C1D95', canvasBg:'#ffffff', category:'purple'},
+          {id:'lavender',name:'🪷 Lavande',   stroke:'#8B5CF6', boxBg:'#F5F3FF', boxBorder:'#8B5CF6', boxText:'#4C1D95', canvasBg:'#ffffff', category:'purple'},
+          {id:'indigo',  name:'🔵 Indigo',    stroke:'#6366F1', boxBg:'#EEF2FF', boxBorder:'#6366F1', boxText:'#312E81', canvasBg:'#ffffff', category:'purple'},
+          
+          // Thèmes Chauds - Couleurs plus distinctes
+          {id:'yellow',  name:'🟡 Jaune',     stroke:'#EAB308', boxBg:'#FEF9C3', boxBorder:'#EAB308', boxText:'#713F12', canvasBg:'#ffffff', category:'warm'},
+          {id:'amber',   name:'🟠 Ambre',      stroke:'#F59E0B', boxBg:'#FEF3C7', boxBorder:'#F59E0B', boxText:'#78350F', canvasBg:'#ffffff', category:'warm'},
+          {id:'orange',  name:'🍊 Orange',    stroke:'#F97316', boxBg:'#FFEDD5', boxBorder:'#F97316', boxText:'#7C2D12', canvasBg:'#ffffff', category:'warm'},
+          {id:'red',     name:'🔴 Rouge',     stroke:'#DC2626', boxBg:'#FEE2E2', boxBorder:'#DC2626', boxText:'#7F1D1D', canvasBg:'#ffffff', category:'warm'},
+          {id:'peach',   name:'🍑 Pêche',     stroke:'#FB923C', boxBg:'#FFEDD5', boxBorder:'#FB923C', boxText:'#7C2D12', canvasBg:'#ffffff', category:'warm'}
         ],
 
         settingsForm:{ base_url:'https://api.mistral.ai', api_key:'' },
@@ -475,16 +732,43 @@ GAMME->>DPI: ADT^A01 (Création dossier patient)
 
         /* ---- Helpers couleurs ---- */
         mix(c1, c2, p){ // mélange 0..1
-          const a=this.hex2rgb(c1), b=this.hex2rgb(c2);
-          const r=Math.round(a.r+(b.r-a.r)*p), g=Math.round(a.g+(b.g-a.g)*p), bl=Math.round(a.b+(b.b-a.b)*p);
-          return `#${[r,g,bl].map(x=>x.toString(16).padStart(2,'0')).join('')}`;
+          try {
+            // Sécuriser p entre 0 et 1
+            p = Math.max(0, Math.min(1, Math.abs(p)));
+            const a=this.hex2rgb(c1), b=this.hex2rgb(c2);
+            const r=Math.max(0, Math.min(255, Math.round(a.r+(b.r-a.r)*p)));
+            const g=Math.max(0, Math.min(255, Math.round(a.g+(b.g-a.g)*p)));
+            const bl=Math.max(0, Math.min(255, Math.round(a.b+(b.b-a.b)*p)));
+            return `#${[r,g,bl].map(x=>x.toString(16).padStart(2,'0')).join('')}`;
+          } catch(e) {
+            console.error('Mix error:', e, c1, c2, p);
+            return c1; // Retourner la couleur d'origine en cas d'erreur
+          }
         },
-        hex2rgb(hex){ const m=hex.replace('#',''); return {r:parseInt(m.substr(0,2),16),g:parseInt(m.substr(2,2),16),b:parseInt(m.substr(4,2),16)}; },
+        hex2rgb(hex){ 
+          try {
+            const m=hex.replace('#',''); 
+            return {
+              r:parseInt(m.substr(0,2),16) || 0,
+              g:parseInt(m.substr(2,2),16) || 0,
+              b:parseInt(m.substr(4,2),16) || 0
+            };
+          } catch(e) {
+            return {r:0, g:0, b:0};
+          }
+        },
 
         /* ---- Lifecycle ---- */
         init(){
+          // Charger depuis localStorage
           this.loadFromStorage();
-          this.applyTheme();    // recolor UI si Enovacom
+          
+          // FORCER le thème Enovacom si c'est le thème sélectionné
+          // Cela garantit que les couleurs correspondent bien au thème
+          if(this.theme === 'enovacom') {
+            this.applyTheme(); // Force les couleurs Enovacom
+          }
+          
           this.applyFontToPage();
           this.loadModels();
           this.initSpeech();
@@ -493,20 +777,54 @@ GAMME->>DPI: ADT^A01 (Création dossier patient)
         },
 
         loadFromStorage(){
-          const c=localStorage;
-          const code=c.getItem('diagflow_code'); if(code) this.mermaidCode=code;
-          const theme=c.getItem('diagflow_theme'); if(theme) this.theme=theme;
-          const color=c.getItem('diagflow_color'); if(color) this.primaryColor=color;
-          const font=c.getItem('diagflow_font'); if(font) this.fontFamily=font;
-          const model=c.getItem('diagflow_model'); if(model) this.selectedModel=model;
+          try {
+            const c=localStorage;
+            
+            // Vérifier si c'est le premier lancement
+            const isFirstLaunch = !c.getItem('diagflow_theme');
+            
+            if(isFirstLaunch) {
+              // PREMIER LANCEMENT : Forcer Enovacom + Poppins
+              console.log('🎉 Premier lancement - Application des paramètres par défaut : Enovacom + Poppins');
+              this.theme = 'enovacom';
+              this.fontFamily = 'Poppins, sans-serif';
+              this.fontSize = 16;
+              // Les couleurs seront appliquées par applyTheme() dans init()
+            } else {
+              // Chargement normal depuis localStorage
+              const code=c.getItem('diagflow_code'); if(code) this.mermaidCode=code;
+              const theme=c.getItem('diagflow_theme'); if(theme) this.theme=theme;
+              const borderColor=c.getItem('diagflow_borderColor'); if(borderColor) this.borderColor=borderColor;
+              const fillColor=c.getItem('diagflow_fillColor'); if(fillColor) this.fillColor=fillColor;
+              const textColor=c.getItem('diagflow_textColor'); if(textColor) this.textColor=textColor;
+              const font=c.getItem('diagflow_font'); if(font) this.fontFamily=font;
+              const size=c.getItem('diagflow_fontSize'); if(size) this.fontSize=parseInt(size);
+              const model=c.getItem('diagflow_model'); if(model) this.selectedModel=model;
+              const history=c.getItem('diagflow_history'); if(history) try{ this.promptHistory=JSON.parse(history); }catch(e){}
+            }
+          } catch(e) {
+            console.error('Erreur chargement localStorage:', e);
+            // En cas d'erreur, forcer les valeurs par défaut
+            this.theme = 'enovacom';
+            this.fontFamily = 'Poppins, sans-serif';
+            this.fontSize = 16;
+          }
         },
         saveToStorage(){
-          const c=localStorage;
-          c.setItem('diagflow_code', this.mermaidCode);
-          c.setItem('diagflow_theme', this.theme);
-          c.setItem('diagflow_color', this.primaryColor);
-          c.setItem('diagflow_font', this.fontFamily);
-          if(this.selectedModel) c.setItem('diagflow_model', this.selectedModel);
+          try {
+            const c=localStorage;
+            c.setItem('diagflow_code', this.mermaidCode);
+            c.setItem('diagflow_theme', this.theme);
+            c.setItem('diagflow_borderColor', this.borderColor);
+            c.setItem('diagflow_fillColor', this.fillColor);
+            c.setItem('diagflow_textColor', this.textColor);
+            c.setItem('diagflow_font', this.fontFamily);
+            c.setItem('diagflow_fontSize', this.fontSize.toString());
+            if(this.selectedModel) c.setItem('diagflow_model', this.selectedModel);
+            c.setItem('diagflow_history', JSON.stringify(this.promptHistory));
+          } catch(e) {
+            console.error('Erreur sauvegarde localStorage:', e);
+          }
         },
 
         async loadModels(){
@@ -524,7 +842,17 @@ GAMME->>DPI: ADT^A01 (Création dossier patient)
         applyTheme(){
           const th=this.availableThemes.find(t=>t.id===this.theme);
           if(!th) return;
-          this.primaryColor = th.stroke;
+          
+          // RESET COMPLET : Appliquer les couleurs du thème (écrase les personnalisations)
+          this.borderColor = th.boxBorder;
+          this.fillColor = th.boxBg;
+          this.textColor = th.boxText;
+          
+          console.log('Thème appliqué:', th.name, {
+            borderColor: this.borderColor,
+            fillColor: this.fillColor,
+            textColor: this.textColor
+          });
 
           // Recolor UI seulement pour Enovacom (branding)
           if(th.id==='enovacom'){
@@ -533,11 +861,40 @@ GAMME->>DPI: ADT^A01 (Création dossier patient)
             r.setProperty('--primary-dark', '#083832'); r.setProperty('--accent', '#22c55e');
             r.setProperty('--accent-light', '#4ade80');
           }
+          
           this.saveToStorage();
+          
+          // Forcer le re-render immédiat pour voir le changement
+          this.renderMermaid();
         },
-        onFontChange(){ this.applyFontToPage(); this.renderMermaid(); this.saveToStorage(); },
-        applyFontToPage(){ const preview=document.getElementById('preview'); if(preview){ preview.style.setProperty('--app-font', this.fontFamily); } },
-        updateColors(){ this.saveToStorage(); },
+        onFontChange(){ 
+          this.applyFontToPage(); 
+          this.renderMermaid(); 
+          this.saveToStorage(); 
+        },
+        applyFontToPage(){ 
+          const preview=document.getElementById('preview'); 
+          if(preview){ 
+            preview.style.fontFamily = this.fontFamily;
+            preview.style.setProperty('--app-font', this.fontFamily);
+            // Appliquer aussi sur le SVG si présent
+            const svg = preview.querySelector('svg');
+            if(svg){
+              svg.style.fontFamily = this.fontFamily;
+              svg.querySelectorAll('*').forEach(el => {
+                if(el.tagName === 'text' || el.tagName === 'tspan'){
+                  el.style.fontFamily = this.fontFamily;
+                }
+              });
+            }
+          } 
+        },
+        updateColors(){ 
+          // Ne pas re-rendre, juste sauvegarder et forcer un refresh
+          this.saveToStorage();
+          // Attendre un peu puis re-rendre
+          setTimeout(() => this.renderMermaid(), 50);
+        },
 
         /* ---- Rendu Mermaid avec couleurs de BOÎTES par thème ---- */
         async renderMermaid(){
@@ -549,47 +906,174 @@ GAMME->>DPI: ADT^A01 (Création dossier patient)
           const cssFamily=this.fontFamily.replace(/"/g,"'");
           const edgeBg=isDark ? this.mix(th.canvasBg,'#000',.3) : '#ffffff';
 
+          // Utiliser les couleurs personnalisées
+          const strokeColor = this.borderColor || th.boxBorder;
+          const fillBg = this.fillColor || th.boxBg;
+          const textCol = this.textColor || th.boxText;
+          
+          // Calculer les couleurs dérivées de manière sécurisée
+          const clusterFill = this.mix(fillBg, isDark ? '#000000' : '#ffffff', 0.15);
+          const noteFill = this.mix(fillBg, isDark ? '#000000' : '#ffffff', 0.1);
+          
           const themeCSS = `
-            svg { background:${th.canvasBg}; }
-            /* Flowchart nodes */
-            .node rect, .node polygon, .node path { fill:${th.boxBg}; stroke:${th.boxBorder}; }
-            .node text { fill:${th.boxText}; }
-            /* Clusters */
-            .cluster rect { fill:${this.mix(th.boxBg, '#ffffff', isDark?-.2:.2)}; stroke:${th.boxBorder}; }
-            .cluster text { fill:${th.boxText}; }
+            svg { 
+              background:${th.canvasBg} !important; 
+              font-family: ${cssFamily} !important;
+              font-size: ${this.fontSize}px !important;
+            }
+            
+            /* POLICE ET TAILLE - Forcer sur TOUS les éléments texte */
+            text, tspan, .nodeLabel, .edgeLabel, .label, .messageText, .noteText,
+            .actor text, .labelText, .titleText, .classText, .stateText,
+            .er .entityLabel, .taskText, .sectionTitle, .gridLabel {
+              font-family: ${cssFamily} !important;
+              font-size: ${this.fontSize}px !important;
+            }
+            
+            /* Flowchart - TOUS les types de noeuds */
+            .node rect, .node polygon, .node circle, .node ellipse, .node path { 
+              fill:${fillBg} !important; 
+              stroke:${strokeColor} !important; 
+            }
+            .node text, .nodeLabel { 
+              fill:${textCol} !important;
+              font-family: ${cssFamily} !important;
+              font-size: ${this.fontSize}px !important;
+            }
+            
+            /* Flowchart - Formes spéciales (losanges, cercles, etc.) */
+            .label-container rect, .label-container polygon, .label-container circle { 
+              fill:${fillBg} !important; 
+              stroke:${strokeColor} !important; 
+            }
+            
+            /* Clusters / Subgraphs */
+            .cluster rect, .cluster polygon { 
+              fill:${clusterFill} !important; 
+              stroke:${strokeColor} !important; 
+            }
+            .cluster text, .cluster .nodeLabel { 
+              fill:${textCol} !important;
+              font-family: ${cssFamily} !important;
+              font-size: ${this.fontSize}px !important;
+            }
+            
             /* Edge labels & titles */
-            .edgeLabel, .label { color:${th.boxText}; }
-            .edgeLabel rect { fill:${edgeBg}; }
-            /* Sequence actors & notes */
-            .actor > rect { fill:${th.boxBg}; stroke:${th.boxBorder}; }
-            .actor > text { fill:${th.boxText}; }
-            .note { fill:${this.mix(th.boxBg,'#ffffff',.1)}; stroke:${this.mix(th.boxBorder,'#000',.05)}; }
-            .messageText { fill:${th.boxText}; }
+            .edgeLabel, .label { 
+              color:${textCol} !important;
+              font-family: ${cssFamily} !important;
+              font-size: ${this.fontSize}px !important;
+            }
+            .edgeLabel rect, .edgeLabel polygon { fill:${edgeBg} !important; }
+            .edgeLabel text { 
+              fill:${textCol} !important;
+              font-family: ${cssFamily} !important;
+              font-size: ${this.fontSize}px !important;
+            }
+            
+            /* Sequence diagram */
+            .actor, .actor-box { fill:${fillBg} !important; stroke:${strokeColor} !important; }
+            .actor rect, .actor polygon { fill:${fillBg} !important; stroke:${strokeColor} !important; }
+            .actor text, .actor-man text { 
+              fill:${textCol} !important;
+              font-family: ${cssFamily} !important;
+              font-size: ${this.fontSize}px !important;
+            }
+            .note { fill:${noteFill} !important; stroke:${strokeColor} !important; }
+            .noteText, .messageText { 
+              fill:${textCol} !important;
+              font-family: ${cssFamily} !important;
+              font-size: ${this.fontSize}px !important;
+            }
+            
+            /* Class diagram */
+            .classGroup rect { fill:${fillBg} !important; stroke:${strokeColor} !important; }
+            .classGroup text { 
+              fill:${textCol} !important;
+              font-family: ${cssFamily} !important;
+              font-size: ${this.fontSize}px !important;
+            }
+            
+            /* State diagram */
+            .stateGroup rect, .stateGroup circle { fill:${fillBg} !important; stroke:${strokeColor} !important; }
+            .stateGroup text { 
+              fill:${textCol} !important;
+              font-family: ${cssFamily} !important;
+              font-size: ${this.fontSize}px !important;
+            }
+            
+            /* ER diagram */
+            .er .entityBox { fill:${fillBg} !important; stroke:${strokeColor} !important; }
+            .er .entityLabel { 
+              fill:${textCol} !important;
+              font-family: ${cssFamily} !important;
+              font-size: ${this.fontSize}px !important;
+            }
+            .er .attributeBoxEven, .er .attributeBoxOdd { fill:${fillBg} !important; }
+            
+            /* Gantt */
+            .grid .tick { stroke:${strokeColor} !important; }
+            .taskText { 
+              fill:${textCol} !important;
+              font-family: ${cssFamily} !important;
+              font-size: ${this.fontSize}px !important;
+            }
           `;
 
           try{
             mermaid.initialize({
               startOnLoad:false,
               securityLevel:'loose',
-              theme: isDark ? 'dark' : 'base',
+              theme: 'base',
               themeVariables:{
-                primaryColor: this.primaryColor,
-                primaryTextColor: th.boxText,
-                lineColor: this.primaryColor,
-                fontFamily: this.fontFamily,
+                fontFamily: cssFamily,
                 fontSize: this.fontSize + 'px',
+                
+                // Couleurs principales
+                primaryColor: fillBg,
+                primaryBorderColor: strokeColor,
+                primaryTextColor: textCol,
+                
+                // Lignes et bordures
+                lineColor: strokeColor,
+                border1: strokeColor,
+                border2: strokeColor,
+                
+                // Backgrounds
                 background: th.canvasBg,
-                mainBkg: th.boxBg,
-                clusterBkg: this.mix(th.boxBg,'#ffffff', isDark?-.15:.15),
-                clusterBorder: th.boxBorder,
-                secondaryColor: this.mix(this.primaryColor,'#ffffff',.5),
-                tertiaryColor: this.mix(this.primaryColor,'#ffffff',.8),
+                mainBkg: fillBg,
+                secondBkg: fillBg,
+                tertiaryColor: fillBg,
+                
+                // Clusters
+                clusterBkg: clusterFill,
+                clusterBorder: strokeColor,
+                
+                // Notes et labels
+                noteBkgColor: noteFill,
+                noteBorderColor: strokeColor,
                 edgeLabelBackground: edgeBg,
-                noteBkgColor: this.mix(th.boxBg,'#ffffff',.1),
-                noteBorderColor: this.mix(th.boxBorder,'#000',.05),
-                actorBkg: th.boxBg,
-                actorBorder: th.boxBorder,
-                actorTextColor: th.boxText
+                labelColor: textCol,
+                
+                // Sequence diagram
+                actorBkg: fillBg,
+                actorBorder: strokeColor,
+                actorTextColor: textCol,
+                actorLineColor: strokeColor,
+                signalColor: strokeColor,
+                signalTextColor: textCol,
+                
+                // Class diagram
+                classText: textCol,
+                
+                // State diagram  
+                labelBoxBkgColor: fillBg,
+                labelBoxBorderColor: strokeColor,
+                labelTextColor: textCol,
+                
+                // ER diagram
+                attributeBackgroundColorOdd: fillBg,
+                attributeBackgroundColorEven: fillBg
               },
               themeCSS
             });
@@ -599,8 +1083,18 @@ GAMME->>DPI: ADT^A01 (Création dossier patient)
             const { svg } = await mermaid.render('mermaid-diagram', this.mermaidCode);
             preview.innerHTML=svg;
 
+            // FORCER la police et la taille sur TOUS les éléments texte
             const svgEl=preview.querySelector('svg');
-            if(svgEl){ svgEl.style.fontFamily=this.fontFamily; svgEl.style.fontSize=this.fontSize+'px'; }
+            if(svgEl){ 
+              svgEl.style.fontFamily=this.fontFamily; 
+              svgEl.style.fontSize=this.fontSize+'px';
+              
+              // Forcer sur tous les éléments texte
+              svgEl.querySelectorAll('text, tspan, .nodeLabel, .edgeLabel, .label, .messageText, .noteText, .actor text, .labelText, .titleText, .classText, .stateText, .taskText').forEach(el => {
+                el.style.fontFamily = this.fontFamily;
+                el.style.fontSize = this.fontSize + 'px';
+              });
+            }
             this.lastError='';
           }catch(err){
             this.lastError = err?.message || 'Erreur Mermaid';
@@ -627,40 +1121,150 @@ GAMME->>DPI: ADT^A01 (Création dossier patient)
           try{
             const r=await fetch('/api/generate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({prompt:this.prompt,engine:'mistral',model:this.selectedModel})});
             const d=await r.json();
-            if(r.ok){ this.mermaidCode=d.mermaid; this.renderMermaid(); this.showToast('Diagramme généré !','success'); }
+            if(r.ok){ 
+              this.mermaidCode=d.mermaid; 
+              this.addToHistory(this.prompt);
+              this.renderMermaid(); 
+              this.showToast('Diagramme généré !','success'); 
+            }
             else{ this.showToast(d.error||'Erreur lors de la génération','error'); }
           }catch(e){ this.showToast('Erreur réseau','error'); }
           finally{ this.loading=false; }
         },
 
-        generateDemo(){
-          const demos=[`flowchart TD
-A[Arrivée patient] --> B{Urgence ?}
-B -->|Oui| C[Triage]
-B -->|Non| D[Accueil]
-C --> E[Consultation]
-D --> F[Prise RDV]
-E --> G{Examens ?}
-F --> G
-G -->|Oui| H[Prescrire]
-G -->|Non| I[Diagnostic]
-H --> J[Examens]
-J --> I
-I --> K[Plan de traitement]
-K --> L[Suivi patient]`,
-`sequenceDiagram
-autonumber
-participant P as Patient
-participant I as Infirmier
-participant M as Médecin
-P->>I: Arrivée
-I->>M: Dossier
-activate M
-M-->>I: Instructions
-deactivate M
-I-->>P: Explications`];
-          this.mermaidCode=demos[Math.floor(Math.random()*demos.length)];
-          this.renderMermaid(); this.showToast('Démo chargée !','success');
+        addToHistory(promptText){
+          if(!promptText || !promptText.trim()) return;
+          const text = promptText.trim();
+          // Éviter les doublons
+          this.promptHistory = this.promptHistory.filter(p => p !== text);
+          // Ajouter au début
+          this.promptHistory.unshift(text);
+          // Limiter à 10
+          if(this.promptHistory.length > 10) this.promptHistory = this.promptHistory.slice(0, 10);
+          this.saveToStorage();
+        },
+
+        loadFromHistory(promptText){
+          this.prompt = promptText;
+          this.showToast('Prompt chargé depuis l\'historique','success');
+        },
+
+        clearHistory(){
+          if(confirm('Voulez-vous vraiment effacer tout l\'historique ?')){
+            this.promptHistory = [];
+            this.saveToStorage();
+            this.showToast('Historique effacé','success');
+          }
+        },
+
+        loadDemoByType(type){
+          const demoExamples = {
+            flowchart: `flowchart LR
+  A[Arrivée patient] --> B{Urgence ?}
+  B -- Oui --> C((Triage prioritaire))
+  B -. Non .-> D[Accueil standard]
+  C ==> E[Consultation]
+  D --> E`,
+            sequence: `sequenceDiagram
+  autonumber
+  participant P as Patient
+  participant I as Infirmier
+  participant M as Médecin
+
+  P ->> I: Arrivée
+  I ->> M: Dossier
+  activate M
+  M -->> I: Instructions
+  deactivate M
+
+  Note over P,I: Accueil & triage
+
+  alt Urgent
+    I ->> M: Appel prioritaire
+  else Standard
+    I ->> P: Salle d'attente
+  end`,
+            class: `classDiagram
+  class Patient {
+    +id: string
+    +nom: string
+    +admettre()
+  }
+  class Dossier {
+    +id: string
+    +etat: string
+  }
+  Patient "1" -- "1" Dossier : possède
+  Dossier <|-- DossierUrgent : hérite`,
+            state: `stateDiagram-v2
+  [*] --> EnAttente
+  EnAttente --> EnCours: déclencher
+  EnCours --> Terminé: finir
+  state EnCours {
+    [*] --> Traitement
+    Traitement --> Validation
+    Validation --> [*]
+  }
+  Terminé --> [*]`,
+            er: `erDiagram
+  PATIENT ||--o{ DOSSIER : a
+  DOSSIER ||--o{ EXAMEN : contient
+  PATIENT {
+    string id PK
+    string nom
+  }
+  DOSSIER {
+    string id PK
+    string etat
+  }`,
+            gantt: `gantt
+  title Parcours patient
+  dateFormat  YYYY-MM-DD
+  section Accueil
+  Admission       :a1, 2025-04-01, 1d
+  Triage          :after a1, 1d
+  section Soins
+  Examens         :crit, 2d
+  Diagnostic      :1d`,
+            pie: `pie showData
+  title Répartition des actes médicaux
+  "Consultations" : 45
+  "Examens" : 30
+  "Urgences" : 15
+  "Hospitalisations" : 10`,
+            gitgraph: `gitGraph
+  commit
+  branch develop
+  checkout develop
+  commit
+  commit
+  checkout main
+  merge develop
+  commit
+  branch feature
+  checkout feature
+  commit
+  checkout main
+  merge feature
+  commit`,
+            journey: `journey
+  title Parcours Patient
+  section Admission
+    Accueil: 5: Patient
+    Triage: 3: Infirmier
+    Dossier: 2: Système
+  section Consultation
+    Examen: 4: Médecin
+    Diagnostic: 3: Médecin
+    Traitement: 5: Équipe médicale
+  section Suivi
+    Sortie: 2: Infirmier
+    RDV Suivi: 1: Système`
+          };
+          
+          this.mermaidCode = demoExamples[type] || demoExamples.flowchart;
+          this.renderMermaid(); 
+          this.showToast('Démo chargée !','success');
         },
 
         /* ---- Export fiable (toBlob) ---- */
@@ -681,29 +1285,60 @@ I-->>P: Explications`];
           const svg=document.querySelector('#preview svg');
           if(!svg){ this.showToast('Aucun diagramme à exporter','error'); return; }
 
-          if(document.fonts && document.fonts.ready){ try{ await document.fonts.ready; }catch(e){} }
+          try{
+            // Attendre que toutes les polices soient chargées
+            if(document.fonts && document.fonts.ready){ 
+              await document.fonts.ready; 
+              // Petit délai supplémentaire pour sécuriser le rendu
+              await new Promise(resolve => setTimeout(resolve, 100));
+            }
+          }catch(e){ console.warn('Font loading timeout:', e); }
 
-          const clone=svg.cloneNode(true);
-          if(!clone.getAttribute('xmlns')) clone.setAttribute('xmlns','http://www.w3.org/2000/svg');
-          clone.style.fontFamily=this.fontFamily; clone.style.fontSize=this.fontSize+'px';
+          // Utiliser html2canvas ou une approche différente pour éviter CORS
+          // On va dessiner directement le SVG sans passer par une image intermédiaire
+          
+          let w, h;
+          const vb = svg.getAttribute('viewBox');
+          if(vb){ 
+            const p = vb.trim().split(/\s+/).map(Number); 
+            w = p[2]; h = p[3]; 
+          } else { 
+            const bbox = svg.getBBox(); 
+            w = bbox.width; h = bbox.height; 
+          }
+          w = Math.max(1, Math.floor(w));
+          h = Math.max(1, Math.floor(h));
 
-          const svgStr=new XMLSerializer().serializeToString(clone);
-          const svgBlob=new Blob([svgStr],{type:'image/svg+xml;charset=utf-8'});
-          const url=URL.createObjectURL(svgBlob);
+          const canvas = document.createElement('canvas');
+          canvas.width = Math.round(w * scale);
+          canvas.height = Math.round(h * scale);
+          const ctx = canvas.getContext('2d');
 
-          const img=new Image();
-          img.onload=()=>{
-            let w,h;
-            const vb=clone.getAttribute('viewBox');
-            if(vb){ const p=vb.trim().split(/\s+/).map(Number); w=p[2]; h=p[3]; } else { const r=svg.getBBox(); w=r.width; h=r.height; }
-            w=Math.max(1,Math.floor(w)); h=Math.max(1,Math.floor(h));
+          // Fond blanc pour JPEG
+          if(mime === 'image/jpeg'){
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+          }
 
-            const canvas=document.createElement('canvas');
-            canvas.width=Math.round(w*scale); canvas.height=Math.round(h*scale);
-            const ctx=canvas.getContext('2d');
+          // Cloner et préparer le SVG
+          const clone = svg.cloneNode(true);
+          if(!clone.getAttribute('xmlns')) clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
+          clone.setAttribute('width', w);
+          clone.setAttribute('height', h);
+          
+          // Forcer la police
+          clone.style.fontFamily = this.fontFamily;
+          clone.style.fontSize = this.fontSize + 'px';
 
-            if(mime==='image/jpeg'){ ctx.fillStyle='#ffffff'; ctx.fillRect(0,0,canvas.width,canvas.height); } // PNG transparent par défaut
-            ctx.setTransform(scale,0,0,scale,0,0);
+          const svgStr = new XMLSerializer().serializeToString(clone);
+          
+          // CORRECTION CRITIQUE : Utiliser data URL au lieu de blob URL pour éviter CORS
+          const svgBase64 = btoa(unescape(encodeURIComponent(svgStr)));
+          const url = `data:image/svg+xml;base64,${svgBase64}`;
+
+          const img = new Image();
+          img.onload = () => {
+            ctx.setTransform(scale, 0, 0, scale, 0, 0);
             ctx.drawImage(img,0,0,w,h);
 
             canvas.toBlob((blob)=>{
