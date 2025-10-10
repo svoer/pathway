@@ -92,7 +92,22 @@ family=JetBrains+Mono:wght@600;700&display=swap" />
           <span class="brand-tagline">From idea to diagram in seconds</span>
         </div>
         <div class="flex items-center gap-3">
-          <button @click="generateDemo()" class="neo-btn" title="Charger une démo">Démo</button>
+          <div x-data="{showDiagramMenu: false}" class="relative">
+            <button @click="showDiagramMenu = !showDiagramMenu" class="neo-btn" title="Choisir un type de diagramme">
+              📊 Diagramme
+            </button>
+            <div x-show="showDiagramMenu" @click.away="showDiagramMenu = false" x-cloak class="absolute top-full mt-2 right-0 bg-white border border-gray-200 rounded-xl shadow-xl p-2 z-50 min-w-[220px]">
+              <button @click="loadDemoByType('flowchart'); showDiagramMenu = false" class="w-full text-left px-3 py-2 hover:bg-gray-50 rounded-lg transition-colors">🔄 Flowchart</button>
+              <button @click="loadDemoByType('sequence'); showDiagramMenu = false" class="w-full text-left px-3 py-2 hover:bg-gray-50 rounded-lg transition-colors">💬 Sequence</button>
+              <button @click="loadDemoByType('class'); showDiagramMenu = false" class="w-full text-left px-3 py-2 hover:bg-gray-50 rounded-lg transition-colors">📦 Class</button>
+              <button @click="loadDemoByType('state'); showDiagramMenu = false" class="w-full text-left px-3 py-2 hover:bg-gray-50 rounded-lg transition-colors">🔀 State</button>
+              <button @click="loadDemoByType('er'); showDiagramMenu = false" class="w-full text-left px-3 py-2 hover:bg-gray-50 rounded-lg transition-colors">🗄️ ER Diagram</button>
+              <button @click="loadDemoByType('gantt'); showDiagramMenu = false" class="w-full text-left px-3 py-2 hover:bg-gray-50 rounded-lg transition-colors">📅 Gantt</button>
+              <button @click="loadDemoByType('pie'); showDiagramMenu = false" class="w-full text-left px-3 py-2 hover:bg-gray-50 rounded-lg transition-colors">🥧 Pie Chart</button>
+              <button @click="loadDemoByType('gitgraph'); showDiagramMenu = false" class="w-full text-left px-3 py-2 hover:bg-gray-50 rounded-lg transition-colors">🌳 Git Graph</button>
+              <button @click="loadDemoByType('journey'); showDiagramMenu = false" class="w-full text-left px-3 py-2 hover:bg-gray-50 rounded-lg transition-colors">🗺️ Journey</button>
+            </div>
+          </div>
           <button @click="showSettings = true" class="neo-btn" title="Paramètres API">Paramètres</button>
           <button @click="showHelp = true" class="neo-btn" title="Aide Mermaid">Aide</button>
         </div>
