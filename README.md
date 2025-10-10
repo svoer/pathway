@@ -1,28 +1,57 @@
-# 🤖 Pathway From idea to diagram in seconds
+# Enovacom Pathway
 
-Bienvenue dans **Pathway Editor**, un outil qui transforme en temps réel tes idées en **diagrammes intelligents** ✨  
-Ici, tu n’as plus besoin d’écrire toi-même du code Mermaid : tu demandes à l’**IA** ce que tu veux (un organigramme, un Gantt, un mindmap, etc.), et le graphique est **généré instantanément** pour toi. 🚀
+**Application web interne** pour la création de diagrammes professionnels par intelligence artificielle.
+
+> **From idea to diagram in seconds**
+
+## Présentation
+
+**Enovacom Pathway** est une application web développée en interne pour les collaborateurs Enovacom. Elle permet de générer automatiquement des diagrammes professionnels (Mermaid.js) à partir de descriptions en langage naturel, grâce à l'intelligence artificielle Mistral AI.
+
+### Cas d'usage
+- **Architecture technique** : Diagrammes de séquence, diagrammes de classes
+- **Processus métier** : Flowcharts, diagrammes d'états
+- **Gestion de projet** : Gantt, timelines
+- **Documentation** : Diagrammes ER, mindmaps
+- **Présentations clients** : Tous types de diagrammes personnalisables
+
+### Avantages
+- ✅ **Gain de temps** : Génération instantanée par IA
+- ✅ **Qualité professionnelle** : 30+ thèmes, export haute qualité
+- ✅ **Simplicité** : Pas besoin de connaître la syntaxe Mermaid
+- ✅ **Personnalisation** : Couleurs, polices, styles entièrement configurables
+- ✅ **Sécurité** : Données stockées localement, aucun serveur central
 
 ---
 
-## 🧠 Ce que l’IA peut générer pour toi
-En quelques secondes, tu peux obtenir :
-- 🌀 **Flowcharts** – Processus, parcours utilisateurs, décisions
-- 📊 **Gantt charts** – Plannings et roadmaps projet
-- 🤝 **Sequence diagrams** – Interactions entre systèmes
-- 🏷️ **Class & Entity diagrams** – UML et bases de données
-- 🧠 **Mindmaps** – Brainstorming, organisation d’idées
-- 📈 **State diagrams** – États d’un système
-👉 Tu décris ton besoin avec une phrase simple, l’IA fait le reste.
-
----
-
-## ⚡ Installation rapide
+## ⚡ Installation
 
 ### Prérequis
-- **Python 3.8+** : [Télécharger Python](https://www.python.org/downloads/)
-  - ⚠️ **Important lors de l'installation** : Cochez la case **"Add Python to PATH"** !
-- **Clé API Mistral AI** (personnelle) : [Obtenir une clé](https://console.mistral.ai)
+
+#### 1. Python 3.8+
+- **Télécharger** : [python.org/downloads](https://www.python.org/downloads/)
+- ⚠️ **Important** : Lors de l'installation, cochez la case **"Add Python to PATH"**
+
+#### 2. Clé API Mistral AI (gratuite)
+
+**Mistral AI offre 5€ de crédits gratuits** pour tester l'API, suffisant pour générer des centaines de diagrammes.
+
+**Étapes pour créer votre compte gratuit :**
+
+1. **Créer un compte** : Rendez-vous sur [console.mistral.ai](https://console.mistral.ai)
+2. **S'inscrire** : Utilisez votre email professionnel Enovacom
+3. **Vérifier votre email** : Cliquez sur le lien de confirmation
+4. **Accéder à la console** : Connectez-vous à [console.mistral.ai](https://console.mistral.ai)
+5. **Créer une clé API** :
+   - Cliquez sur **"API Keys"** dans le menu
+   - Cliquez sur **"Create new key"**
+   - Donnez un nom à votre clé (ex: "Enovacom Pathway")
+   - Copiez la clé générée (elle ne sera affichée qu'une seule fois !)
+6. **Conserver votre clé** : Sauvegardez-la dans un endroit sûr
+
+> 💡 **Astuce** : Les 5€ gratuits permettent environ 500 générations de diagrammes. Au-delà, vous pouvez ajouter des crédits selon vos besoins (tarifs très compétitifs).
+
+> 🔒 **Sécurité** : Votre clé API est stockée uniquement dans le localStorage de votre navigateur. Elle n'est jamais transmise aux serveurs Enovacom.
 
 ### Installation Windows (automatique)
 
@@ -58,6 +87,34 @@ chmod +x linux/start.sh
 ```
 
 Le script fait tout automatiquement (environnement virtuel, dépendances, lancement).
+
+---
+
+## 🔧 Configuration
+
+### Première utilisation
+
+Lors du premier lancement de l'application :
+
+1. **Ouvrir l'application** : L'application s'ouvre automatiquement sur `http://127.0.0.1:5173`
+2. **Cliquer sur "Paramètres"** : Bouton dans le header de l'application
+3. **Configurer Mistral AI** :
+   - **Base URL** : Laisser `https://api.mistral.ai` (par défaut)
+   - **API Key** : Coller votre clé API Mistral créée précédemment
+4. **Tester la connexion** : Cliquez sur "Tester" pour vérifier que tout fonctionne
+5. **Sauvegarder** : Cliquez sur "Sauvegarder" pour enregistrer vos paramètres
+
+✅ **C'est prêt !** Vous pouvez maintenant générer des diagrammes par IA.
+
+### Sélection du modèle
+
+L'application charge automatiquement la liste des modèles Mistral AI disponibles. Nous recommandons :
+
+- **`mistral-large-latest`** : Le plus puissant, meilleure qualité de génération
+- **`mistral-medium-latest`** : Bon équilibre qualité/coût
+- **`mistral-small-latest`** : Rapide et économique pour tests
+
+> 💡 **Conseil** : Commencez avec `mistral-small-latest` pour tester, puis passez à `mistral-large-latest` pour la production.
 
 ---
 
