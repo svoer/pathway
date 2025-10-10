@@ -34,7 +34,7 @@
 
 #### 2. Clé API Mistral AI (gratuite)
 
-**Mistral AI offre 5€ de crédits gratuits** pour tester l'API, suffisant pour générer des centaines de diagrammes.
+**Mistral AI offre un test d'API gratuit** pour tester l'API, suffisant pour générer des centaines de diagrammes.
 
 **Étapes pour créer votre compte gratuit :**
 
