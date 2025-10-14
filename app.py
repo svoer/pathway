@@ -562,11 +562,33 @@ def generate_pdf():
         
         # Fonction de pied de page
         def footer_canvas(canvas, doc):
+            """Ajoute un footer sur chaque page avec mentions légales"""
             canvas.saveState()
+            
+            # Mentions légales personnalisées ou par défaut
             footer_text = pdf_config.get('legal', 'ENOVACOM - Tous droits réservés')
+            
+            # Style du footer
             canvas.setFont('Helvetica', 8)
-            canvas.setFillColor(colors.HexColor('#6B7280'))
-            canvas.drawCentredString(A4[0]/2, 20, footer_text)
+            canvas.setFillColor(colors.HexColor('#666666'))  # Gris discret
+            
+            # Position du footer (bas de page avec marge)
+            page_width = A4[0]
+            footer_y = 15*mm  # 15mm du bas de la page
+            
+            # Centrer le footer
+            text_width = canvas.stringWidth(footer_text, 'Helvetica', 8)
+            canvas.drawString((page_width - text_width) / 2, footer_y, footer_text)
+            
+            # Optionnel: Ajouter numéro de page
+            if pdf_config.get('page_numbers', True):  # Par défaut activé
+                page_num = f"Page {doc.page}"
+                canvas.setFont('Helvetica', 8)
+                canvas.setFillColor(colors.HexColor('#999999'))  # Plus clair pour le numéro
+                # Numéro de page en bas à droite
+                right_margin = pdf_config.get('theme', {}).get('margins', {}).get('right', 18) * mm
+                canvas.drawRightString(page_width - right_margin, footer_y, page_num)
+            
             canvas.restoreState()
         
         # Créer le document PDF avec pied de page
@@ -1170,11 +1192,8 @@ def generate_pdf():
                         ])
                         story.append(error_block)
         
-        # Footer et Watermark
-        if pdf_config.get('legal'):
-            story.append(Spacer(1, 24))
-            footer_style = ParagraphStyle('Footer', parent=normal_style, fontSize=8, textColor=colors.grey)
-            story.append(Paragraph(pdf_config.get('legal'), footer_style))
+        # Les mentions légales sont maintenant gérées par footer_canvas (pied de page sur chaque page)
+        # Plus besoin de les ajouter ici dans le story
         
         # Watermark (si activé)
         if pdf_config.get('watermark', False):
@@ -1189,8 +1208,8 @@ def generate_pdf():
             )
             story.append(Paragraph('⚠️ CONFIDENTIEL', watermark_style))
         
-        # Construire le PDF
-        doc.build(story)
+        # Construire le PDF avec pied de page sur chaque page
+        doc.build(story, onFirstPage=footer_canvas, onLaterPages=footer_canvas)
         
         pdf_buffer.seek(0)
         
