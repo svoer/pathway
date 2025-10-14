@@ -40,13 +40,18 @@ echo Mise a jour de pip...
 python -m pip install --upgrade pip --quiet
 
 REM Installer les dépendances
-echo Installation des dependances...
-pip install -r requirements.txt --quiet
+echo Installation/Verification des dependances...
+echo (Flask, ReportLab, svglib, BeautifulSoup4, etc.)
+pip install -r requirements.txt
 if errorlevel 1 (
+    echo.
     echo ERREUR: Impossible d'installer les dependances
+    echo Verifiez votre connexion internet et reessayez
     pause
     exit /b 1
 )
+echo.
+echo Toutes les dependances sont installees !
 
 REM Créer le fichier .env s'il n'existe pas
 if not exist .env (

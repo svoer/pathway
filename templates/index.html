@@ -8,52 +8,22 @@
   <!-- Libs (en prod: Tailwind via CLI/PostCSS) -->
   <script src="https://unpkg.com/alpinejs@3.13.0/dist/cdn.min.js" defer></script>
   <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdn.jsdelivr.net/npm/@tailwindcss/typography@0.5.10/dist/typography.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  
+  <!-- Quill.js - Éditeur WYSIWYG -->
+  <link href="https://cdn.quilljs.com/1.3.7/quill.snow.css" rel="stylesheet">
+  <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
+  
+  <!-- Quill Table Module -->
+  <link href="https://unpkg.com/quill-table@2/dist/quill-table.css" rel="stylesheet">
+  <script src="https://unpkg.com/quill-table@2/dist/quill-table.js"></script>
+  
+  <!-- Marked.js - Conversion Markdown vers HTML (UMD global) -->
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 
   <!-- Webfonts -->
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?
-family=Inter:wght@400;600;800&
-family=Work+Sans:wght@400;600;700&
-family=Manrope:wght@400;600;700&
-family=Montserrat:wght@500;700&
-family=JetBrains+Mono:wght@600;700&
-family=Roboto:wght@400;500;700&
-family=Open+Sans:wght@400;600;700&
-family=Lato:wght@400;700&
-family=Poppins:wght@400;600;700&
-family=Nunito:wght@400;600;800&
-family=Raleway:wght@400;600;700&
-family=Ubuntu:wght@400;500;700&
-family=Playfair+Display:wght@400;700&
-family=Merriweather:wght@400;700&
-family=Source+Code+Pro:wght@400;600&
-family=Fira+Code:wght@400;600&
-family=Courier+Prime:wght@400;700&
-family=Space+Mono:wght@400;700&
-family=Quicksand:wght@400;600;700&
-family=Comfortaa:wght@400;600;700&
-family=Pacifico&
-family=Lobster&
-family=Dancing+Script:wght@400;700&
-family=Righteous&
-family=Permanent+Marker&
-family=Bebas+Neue&
-family=Oswald:wght@400;600&
-family=Indie+Flower&
-family=Shadows+Into+Light&
-family=Caveat:wght@400;700&
-family=Archivo:wght@400;600;700&
-family=Barlow:wght@400;600;700&
-family=DM+Sans:wght@400;500;700&
-family=Exo+2:wght@400;600;700&
-family=Karla:wght@400;600;700&
-family=Outfit:wght@400;600;700&
-family=Plus+Jakarta+Sans:wght@400;600;700&
-family=Sora:wght@400;600;700&
-family=Space+Grotesk:wght@400;600;700&
-family=Lexend:wght@400;600;700&
-family=Red+Hat+Display:wght@400;600;700&
-family=Figtree:wght@400;600;700&display=swap" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Poppins:wght@400;600;700&family=Work+Sans:wght@400;600;700&family=Manrope:wght@400;600;700&family=Montserrat:wght@500;700&family=JetBrains+Mono:wght@600;700&display=swap" />
 
   <style>
     [x-cloak]{display:none!important;}
@@ -446,6 +416,300 @@ family=Figtree:wght@400;600;700&display=swap" />
           </div>
         </section>
       </div>
+      
+      <!-- NOUVELLES SECTIONS PHASE 1 -->
+      
+      <!-- Section 2: Compte Rendu -->
+      <section class="neo-card" id="compte-rendu">
+        <div class="neo-card-header">
+          <h2 class="section-title">📝 Compte Rendu</h2>
+        </div>
+        <div class="px-4 pb-4 space-y-4">
+          <!-- Template + Métadonnées -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
+            <div>
+              <label class="block text-sm font-semibold mb-1">Template</label>
+              <select x-model="currentProject.report.template" class="neo-input neo-select">
+                <template x-for="tpl in reportTemplates" :key="tpl.id">
+                  <option :value="tpl.id" x-text="tpl.name"></option>
+                </template>
+              </select>
+            </div>
+            <div>
+              <label class="block text-sm font-semibold mb-1">Date réunion</label>
+              <input type="date" x-model="currentProject.report.meta.date" class="neo-input">
+            </div>
+            <div>
+              <label class="block text-sm font-semibold mb-1">Participants</label>
+              <input type="text" x-model="currentProject.report.meta.participants" class="neo-input" placeholder="Nom1, Nom2...">
+            </div>
+          </div>
+          
+          <!-- Notes brutes -->
+          <div>
+            <label class="block text-sm font-semibold mb-1">Notes / Transcript</label>
+            <textarea x-model="currentProject.report.rawNotes" class="neo-input resize-none" rows="6" placeholder="Collez vos notes de réunion ou transcript ici..."></textarea>
+          </div>
+          
+          <!-- Boutons -->
+          <div class="flex gap-2">
+            <button @click="generateReport()" :disabled="isGeneratingReport || !currentProject.report.rawNotes.trim()" class="neo-btn neo-btn-primary">
+              <span x-show="!isGeneratingReport">✨ Générer le compte rendu</span>
+              <span x-show="isGeneratingReport">⏳ Génération...</span>
+            </button>
+            <button @click="currentProject.report.generated = ''" :disabled="!currentProject.report.generated" class="neo-btn">Réinitialiser</button>
+          </div>
+          
+          <!-- Résultat -->
+          <div x-show="currentProject.report.generated" class="space-y-2">
+            <label class="block text-sm font-semibold">Compte rendu généré (éditable)</label>
+            
+            <!-- Barre d'outils éditeur -->
+            <div class="flex flex-wrap gap-2 mb-2">
+              <button type="button" class="neo-btn" @click="format('bold')"><b>B</b></button>
+              <button type="button" class="neo-btn" @click="format('italic')"><i>I</i></button>
+              <button type="button" class="neo-btn" @click="format('underline')"><u>U</u></button>
+              <button type="button" class="neo-btn" @click="format('strikeThrough')"><s>S</s></button>
+              <div class="h-6 w-px bg-gray-300 mx-1"></div>
+              <button type="button" class="neo-btn" @click="setHeading(1)">H1</button>
+              <button type="button" class="neo-btn" @click="setHeading(2)">H2</button>
+              <button type="button" class="neo-btn" @click="setHeading(3)">H3</button>
+              <button type="button" class="neo-btn" @click="setHeading(4)">H4</button>
+              <button type="button" class="neo-btn" @click="setHeading(5)">H5</button>
+              <button type="button" class="neo-btn" @click="setHeading(6)">H6</button>
+              <div class="h-6 w-px bg-gray-300 mx-1"></div>
+              <button type="button" class="neo-btn" @click="format('insertUnorderedList')">• Liste</button>
+              <button type="button" class="neo-btn" @click="format('insertOrderedList')">1. Liste</button>
+              <div class="h-6 w-px bg-gray-300 mx-1"></div>
+              <button type="button" class="neo-btn" @click="format('justifyLeft')">↤</button>
+              <button type="button" class="neo-btn" @click="format('justifyCenter')">↔</button>
+              <button type="button" class="neo-btn" @click="format('justifyRight')">↦</button>
+              <div class="h-6 w-px bg-gray-300 mx-1"></div>
+              <button type="button" class="neo-btn" @click="undo()">↶ Annuler</button>
+              <button type="button" class="neo-btn" @click="redo()">↷ Rétablir</button>
+              <button type="button" class="neo-btn" @click="insertTable()">↹ Tableau</button>
+              <button type="button" class="neo-btn" @click="clearFormatting()">Effacer formatage</button>
+            </div>
+
+            <!-- Éditeur simple contenteditable avec styles CSS inline pour les tableaux -->
+            <div 
+              id="report-editor"
+              contenteditable="true" 
+              @input="currentProject.report.generated = $event.target.innerHTML; saveProject()"
+              @keydown="onEditorKeydown($event)"
+              x-html="currentProject.report.generated"
+              class="neo-input min-h-[500px] overflow-auto"
+              style="white-space: normal; font-family: Inter, sans-serif; padding: 16px; line-height: 1.6; font-size: 14px;"
+            ></div>
+            
+            <!-- Styles CSS pour les tableaux dans l'éditeur -->
+            <style>
+              #report-editor table {
+                border-collapse: collapse;
+                width: 100%;
+                margin: 16px 0;
+                border: 2px solid #0C4A45;
+              }
+              #report-editor th {
+                background-color: #0C4A45;
+                color: white;
+                padding: 12px;
+                text-align: left;
+                font-weight: bold;
+                border: 1px solid #0C4A45;
+              }
+              #report-editor td {
+                padding: 10px;
+                border: 1px solid #d1d5db;
+              }
+              #report-editor tr:nth-child(even) {
+                background-color: #f9fafb;
+              }
+              #report-editor h2 {
+                font-size: 1.5em;
+                font-weight: bold;
+                margin-top: 24px;
+                margin-bottom: 12px;
+                color: #0C4A45;
+              }
+              #report-editor h3 {
+                font-size: 1.25em;
+                font-weight: bold;
+                margin-top: 20px;
+                margin-bottom: 10px;
+                color: #0C4A45;
+              }
+              #report-editor ul, #report-editor ol {
+                margin: 12px 0;
+                padding-left: 24px;
+              }
+              #report-editor li {
+                margin: 6px 0;
+              }
+              #report-editor p {
+                margin: 12px 0;
+              }
+              #report-editor strong {
+                font-weight: bold;
+                color: #0C4A45;
+              }
+            </style>
+            
+            <div class="flex gap-2 mt-2">
+              <button @click="navigator.clipboard.writeText(document.getElementById('report-editor').innerText); showToast('Copié!', 'success')" class="neo-btn">📋 Copier le texte</button>
+              <button @click="currentProject.report.generated = ''; saveProject()" class="neo-btn">🗑️ Effacer</button>
+            </div>
+          </div>
+        </div>
+      </section>
+      
+      <!-- Section 3: Images -->
+      <section class="neo-card" id="images">
+        <div class="neo-card-header">
+          <h2 class="section-title">🖼️ Images</h2>
+        </div>
+        <div class="px-4 pb-4 space-y-4">
+          <!-- Zone upload -->
+          <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+            <input type="file" id="imageUpload" @change="addImage($event)" accept="image/jpeg,image/png" multiple class="hidden">
+            <label for="imageUpload" class="cursor-pointer">
+              <div class="text-4xl mb-2">📁</div>
+              <div class="text-sm font-semibold">Cliquez pour ajouter des images</div>
+              <div class="text-xs text-gray-500 mt-1">JPEG/PNG • Max 2 Mo/image • Max 10 images</div>
+            </label>
+          </div>
+          
+          <!-- Galerie -->
+          <div x-show="currentProject.images.length > 0" class="grid grid-cols-2 md:grid-cols-3 gap-4">
+            <template x-for="(img, idx) in currentProject.images" :key="img.id">
+              <div class="border border-gray-200 rounded-lg p-2 space-y-2">
+                <div class="relative">
+                  <img :src="img.dataUrl" :alt="img.name" class="w-full h-32 object-cover rounded">
+                  <div class="absolute top-1 right-1 flex gap-1">
+                    <button @click="moveImageUp(idx)" :disabled="idx === 0" class="bg-white rounded px-2 py-1 text-xs shadow hover:bg-gray-100" title="Monter">⬆️</button>
+                    <button @click="moveImageDown(idx)" :disabled="idx === currentProject.images.length - 1" class="bg-white rounded px-2 py-1 text-xs shadow hover:bg-gray-100" title="Descendre">⬇️</button>
+                  </div>
+                </div>
+                <input type="text" x-model="img.caption" class="neo-input text-xs" placeholder="Légende...">
+                <button @click="removeImage(img.id)" class="neo-btn text-xs w-full">🗑️ Supprimer</button>
+              </div>
+            </template>
+          </div>
+          
+          <div x-show="currentProject.images.length === 0" class="text-center text-gray-500 text-sm py-4">
+            Aucune image ajoutée
+          </div>
+        </div>
+      </section>
+      
+      <!-- Section 4: PDF -->
+      <section class="neo-card" id="pdf">
+        <div class="neo-card-header">
+          <h2 class="section-title">📄 Export PDF</h2>
+        </div>
+        <div class="px-4 pb-4 space-y-4">
+          <!-- En-tête du document -->
+          <div class="border-b pb-3 mb-3">
+            <h3 class="text-lg font-semibold mb-3">En-tête du document</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div>
+                <label class="block text-sm font-semibold mb-1">Titre du document (nom du projet)</label>
+                <input type="text" x-model="currentProject.pdfConfig.title" @input="currentProject.name = currentProject.pdfConfig.title" class="neo-input" placeholder="Document">
+              </div>
+              <div>
+                <label class="block text-sm font-semibold mb-1">Client</label>
+                <input type="text" x-model="currentProject.pdfConfig.client" class="neo-input" placeholder="Nom du client">
+              </div>
+              <div>
+                <label class="block text-sm font-semibold mb-1">Sous-titre / Version</label>
+                <input type="text" x-model="currentProject.pdfConfig.subtitle" class="neo-input" placeholder="v1.0">
+              </div>
+              <div>
+                <label class="block text-sm font-semibold mb-1">Logo</label>
+                <input type="file" @change="uploadLogo($event)" accept="image/png,image/jpeg" class="hidden" id="logoUpload">
+                <div class="flex gap-2">
+                  <button @click="document.getElementById('logoUpload').click()" type="button" class="neo-btn">📁 Choisir un fichier</button>
+                  <button @click="setDefaultLogo()" type="button" class="neo-btn">🏛️ Logo Enovacom</button>
+                  <button @click="currentProject.pdfConfig.logo = ''" type="button" class="neo-btn" :disabled="!currentProject.pdfConfig.logo">🗑️ Retirer</button>
+                </div>
+                <div x-show="currentProject.pdfConfig.logo" class="mt-2">
+                  <img :src="currentProject.pdfConfig.logo" alt="Logo" class="h-12 border border-gray-300 rounded">
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-semibold mb-1">Titre du diagramme</label>
+                <input type="text" x-model="currentProject.diagram.title" class="neo-input" placeholder="Diagramme" @input="saveProject()">
+                <p class="text-xs text-gray-500 mt-1">Ce titre apparaîtra dans le PDF si le diagramme est inclus</p>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Pied de page -->
+          <div class="border-b pb-3 mb-3">
+            <h3 class="text-lg font-semibold mb-3">Pied de page</h3>
+            <div class="grid grid-cols-1 gap-3">
+              <div>
+                <label class="block text-sm font-semibold mb-1">Mentions légales</label>
+                <input type="text" x-model="currentProject.pdfConfig.legal" class="neo-input" placeholder="ENOVACOM - Tous droits réservés">
+              </div>
+              <div class="flex items-center gap-2">
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" x-model="currentProject.pdfConfig.watermark" class="w-4 h-4">
+                  <span class="text-sm font-semibold">Watermark "CONFIDENTIEL"</span>
+                </label>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Position du diagramme -->
+          <div>
+            <label class="block text-sm font-semibold mb-1">Position du diagramme dans le PDF</label>
+            <select x-model="currentProject.diagram.position" class="neo-input neo-select">
+              <option value="before_report">Avant le compte rendu</option>
+              <option value="after_report">Après le compte rendu</option>
+              <option value="end">En annexe (fin)</option>
+              <option value="none">Ne pas inclure</option>
+            </select>
+          </div>
+          
+          <!-- Bouton génération -->
+          <button @click="generatePDF()" :disabled="isGeneratingPDF" class="neo-btn neo-btn-primary w-full md:w-auto">
+            <span x-show="!isGeneratingPDF">📥 Télécharger le PDF</span>
+            <span x-show="isGeneratingPDF">⏳ Génération PDF...</span>
+          </button>
+        </div>
+      </section>
+      
+      <!-- Section 5: Historique des projets -->
+      <section class="neo-card" id="historique">
+        <div class="neo-card-header flex items-center justify-between">
+          <h2 class="section-title">📚 Historique des projets</h2>
+          <button x-show="projects.length > 0" @click="clearAllProjects()" class="text-sm text-red-600 hover:text-red-700 font-medium px-3 py-1 rounded hover:bg-red-50 transition">
+            🗑️ Tout effacer
+          </button>
+        </div>
+        <div class="px-4 pb-4">
+          <div x-show="projects.length > 0" class="space-y-2">
+            <template x-for="project in projects" :key="project.id">
+              <div class="border border-gray-200 rounded-lg p-3 flex items-center justify-between hover:bg-gray-50">
+                <div class="flex-1">
+                  <div class="font-semibold" x-text="project.name || project.pdfConfig?.title || 'Sans titre'"></div>
+                  <div class="text-xs text-gray-500" x-text="new Date(project.updatedAt).toLocaleString('fr-FR')"></div>
+                </div>
+                <div class="flex gap-2">
+                  <button @click="loadProject(project.id)" class="neo-btn text-xs">📂 Ouvrir</button>
+                  <button @click="deleteProject(project.id)" class="neo-btn text-xs">🗑️</button>
+                </div>
+              </div>
+            </template>
+          </div>
+          
+          <div x-show="projects.length === 0" class="text-center text-gray-500 text-sm py-4">
+            Aucun projet sauvegardé
+          </div>
+        </div>
+      </section>
+      
     </div>
   </main>
 
@@ -747,6 +1011,32 @@ GAMME->>DPI: ADT^A01 (Création dossier patient)
 `,
         models:[], selectedModel:'', loading:false, loadingModels:false, lastError:'',
         showSettings:false, showHelp:false,
+        
+        // Nouvelles propriétés pour Phase 1
+        currentProject: {
+          id: null,
+          name: '',
+          diagram: { mermaid: '', svg: '', include: true, position: 'before_report', title: 'Diagramme' },
+          report: { template: 'client_formel', rawNotes: '', generated: '', meta: { date: '', participants: '' } },
+          images: [],
+          pdfConfig: { 
+            logo: '', title: 'Document', client: '', subtitle: '', 
+            footer: '{page}/{pages} • {projet} • {date}', legal: 'ENOVACOM - Tous droits réservés', 
+            watermark: false, 
+            theme: { font: 'Inter', primary: '#0C4A45', margins: { top: 24, right: 18, bottom: 28, left: 18 } },
+            order: ['report', 'images', 'diagram']  // Diagramme à la fin par défaut
+          }
+        },
+        projects: [],
+        isGeneratingReport: false,
+        isGeneratingPDF: false,
+        quillEditor: null, // Instance de l'éditeur Quill
+        reportTemplates: [
+          { id: 'client_formel', name: 'Client (formel)' },
+          { id: 'sprint_agile', name: 'Sprint Agile' },
+          { id: 'brief_technique', name: 'Brief technique' }
+        ],
+        defaultLogoUrl: '{{ url_for("static", filename="enovacom_logo.png") }}',
 
         // Visuels - VALEURS PAR DÉFAUT (Enovacom + Poppins)
         theme:'enovacom',
@@ -843,6 +1133,7 @@ GAMME->>DPI: ADT^A01 (Création dossier patient)
           }
           
           this.applyFontToPage();
+          this.loadSettings();
           this.loadModels();
           this.initSpeech();
           this.renderMermaid();
@@ -875,6 +1166,17 @@ GAMME->>DPI: ADT^A01 (Création dossier patient)
               const model=c.getItem('diagflow_model'); if(model) this.selectedModel=model;
               const history=c.getItem('diagflow_history'); if(history) try{ this.promptHistory=JSON.parse(history); }catch(e){}
             }
+            
+            // Charger les projets
+            const projectsData = c.getItem('pathway_projects');
+            if(projectsData) {
+              try {
+                this.projects = JSON.parse(projectsData);
+              } catch(e) {
+                console.error('Erreur chargement projets:', e);
+                this.projects = [];
+              }
+            }
           } catch(e) {
             console.error('Erreur chargement localStorage:', e);
             // En cas d'erreur, forcer les valeurs par défaut
@@ -900,6 +1202,20 @@ GAMME->>DPI: ADT^A01 (Création dossier patient)
           }
         },
 
+        // Charger les paramètres depuis le backend
+        async loadSettings(){
+          try {
+            const response = await fetch('/api/settings');
+            if(response.ok){
+              const data = await response.json();
+              this.settingsForm.base_url = data.mistral_base_url || 'https://api.mistral.ai';
+              // Ne pas charger l'API key pour des raisons de sécurité (elle reste sur le serveur)
+            }
+          } catch(e){
+            console.error('Erreur chargement paramètres:', e);
+          }
+        },
+        
         async loadModels(){
           this.loadingModels=true; this.models=[]; this.selectedModel='';
           try{
@@ -907,6 +1223,64 @@ GAMME->>DPI: ADT^A01 (Création dossier patient)
             if(r.ok){ const d=await r.json(); this.models=d.models||[]; this.selectedModel=this.models[0]||''; }
           }catch(e){ /* silencieux */ }
           finally{ this.loadingModels=false; this.saveToStorage(); }
+        },
+        
+        // Tester la connexion Mistral
+        async testMistralConnection(){
+          if(!this.settingsForm.api_key.trim()){
+            this.showToast('Veuillez saisir une API Key', 'error');
+            return;
+          }
+          
+          try {
+            const response = await fetch('/api/mistral/models', {
+              headers: {
+                'X-Test-Base-URL': this.settingsForm.base_url,
+                'X-Test-API-Key': this.settingsForm.api_key
+              }
+            });
+            
+            if(response.ok){
+              const data = await response.json();
+              this.showToast(`✅ Connexion réussie ! ${data.models.length} modèles disponibles`, 'success');
+            } else {
+              const error = await response.json();
+              this.showToast(`❌ Erreur: ${error.error || 'Connexion échouée'}`, 'error');
+            }
+          } catch(e){
+            this.showToast(`❌ Erreur: ${e.message}`, 'error');
+          }
+        },
+        
+        // Sauvegarder les paramètres Mistral
+        async saveMistralSettings(){
+          if(!this.settingsForm.api_key.trim()){
+            this.showToast('Veuillez saisir une API Key', 'error');
+            return;
+          }
+          
+          try {
+            const response = await fetch('/api/settings/mistral', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                base_url: this.settingsForm.base_url,
+                api_key: this.settingsForm.api_key
+              })
+            });
+            
+            if(response.ok){
+              this.showToast('✅ Paramètres sauvegardés', 'success');
+              // Recharger les modèles avec la nouvelle clé
+              await this.loadModels();
+              this.showSettings = false;
+            } else {
+              const error = await response.json();
+              this.showToast(`❌ Erreur: ${error.error || 'Sauvegarde échouée'}`, 'error');
+            }
+          } catch(e){
+            this.showToast(`❌ Erreur: ${e.message}`, 'error');
+          }
         },
 
         debouncedRender(){ clearTimeout(this.renderTimeout); this.renderTimeout=setTimeout(()=>{ this.renderMermaid(); this.saveToStorage(); },250); },
@@ -1426,7 +1800,467 @@ GAMME->>DPI: ADT^A01 (Création dossier patient)
           img.src=url;
         },
 
-        showToast(msg,type='success'){ const t=document.getElementById('toast'); t.textContent=msg; t.className=`neo-toast ${type} show`; setTimeout(()=>{ t.className=`neo-toast ${type}`; },2400); }
+        showToast(msg,type='success'){ const t=document.getElementById('toast'); t.textContent=msg; t.className=`neo-toast ${type} show`; setTimeout(()=>{ t.className=`neo-toast ${type}`; },2400); },
+        
+        // Commandes WYSIWYG pour l'éditeur
+        execCommand(command, value = null){
+          document.execCommand(command, false, value);
+          document.getElementById('wysiwyg-editor')?.focus();
+        },
+        
+        // Gestion du logo
+        async uploadLogo(event){
+          const file = event.target.files?.[0];
+          if(!file) return;
+          
+          if(!file.type.match(/^image\/(jpeg|png)$/)){
+            this.showToast('Format non supporté (JPEG/PNG uniquement)', 'error');
+            return;
+          }
+          
+          if(file.size > 1 * 1024 * 1024){
+            this.showToast('Logo trop lourd (max 1 Mo)', 'error');
+            return;
+          }
+          
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            this.currentProject.pdfConfig.logo = e.target.result;
+            this.saveProject();
+            this.showToast('Logo ajouté', 'success');
+          };
+          reader.readAsDataURL(file);
+          
+          // Réinitialiser l'input pour permettre de recharger le même fichier
+          event.target.value = '';
+        },
+        
+        async setDefaultLogo(){
+          // Charger le logo Enovacom depuis le serveur et le convertir en base64
+          try {
+            const response = await fetch(this.defaultLogoUrl);
+            const blob = await response.blob();
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              this.currentProject.pdfConfig.logo = e.target.result;
+              this.showToast('Logo Enovacom ajouté', 'success');
+            };
+            reader.readAsDataURL(blob);
+          } catch(e){
+            this.showToast('Erreur chargement logo', 'error');
+          }
+        },
+        
+        // Initialiser Quill
+        initTinyMCE(){
+          const self = this;
+          
+          // Attendre que Quill et le module table soient chargés
+          const initEditor = () => {
+            if(!window.Quill || !window.QuillBetterTable){
+              setTimeout(initEditor, 100);
+              return;
+            }
+            
+            // Enregistrer le module table
+            Quill.register('modules/better-table', window.QuillBetterTable.default);
+            
+            // Initialiser Quill
+            self.quillEditor = new Quill('#quill-editor', {
+              theme: 'snow',
+              modules: {
+                toolbar: [
+                  [{ 'header': [1, 2, 3, false] }],
+                  ['bold', 'italic', 'underline', 'strike'],
+                  [{ 'list': 'ordered'}, { 'list': 'bullet' }],
+                  [{ 'align': [] }],
+                  ['link'],
+                  ['clean'],
+                  [{ 'table': 'TD' }]
+                ],
+                'better-table': {
+                  operationMenu: {
+                    items: {
+                      unmergeCells: {
+                        text: 'Séparer les cellules'
+                      }
+                    }
+                  }
+                },
+                keyboard: {
+                  bindings: window.QuillBetterTable.keyboardBindings
+                }
+              },
+              placeholder: 'Le compte rendu généré apparaîtra ici...'
+            });
+            
+            // Ajouter le bouton d'insertion de tableau dans la toolbar
+            const toolbar = self.quillEditor.getModule('toolbar');
+            toolbar.addHandler('table', () => {
+              const tableModule = self.quillEditor.getModule('better-table');
+              tableModule.insertTable(3, 3);
+            });
+            
+            // Sauvegarde automatique
+            self.quillEditor.on('text-change', () => {
+              self.currentProject.report.generated = self.quillEditor.root.innerHTML;
+              self.saveProject();
+            });
+          };
+          
+          initEditor();
+        },
+        
+        // Copier le texte du rapport
+        copyReportText(){
+          if(this.quillEditor){
+            const text = this.quillEditor.getText();
+            navigator.clipboard.writeText(text);
+            this.showToast('Copié!', 'success');
+          }
+        },
+        
+        // Effacer le rapport
+        clearReport(){
+          if(confirm('Êtes-vous sûr de vouloir effacer le compte rendu ?')){
+            this.currentProject.report.generated = '';
+            if(this.quillEditor){
+              this.quillEditor.setContents([]);
+            }
+            this.saveProject();
+            this.showToast('Compte rendu effacé', 'success');
+          }
+        },
+        
+        // Convertir markdown en HTML pour l'éditeur (ancienne fonction, gardée pour compatibilité)
+        convertMarkdownToHTML(markdown){
+          if(!markdown) return '';
+          
+          let html = markdown;
+          
+          // Titres
+          html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+          html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+          
+          // Gras et italique
+          html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+          html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+          
+          // Listes à puces
+          html = html.replace(/^\* (.+)$/gm, '<li>$1</li>');
+          html = html.replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>');
+          
+          // Listes numérotées  
+          html = html.replace(/^\d+\. (.+)$/gm, '<li>$1</li>');
+          
+          // Paragraphes
+          html = html.replace(/\n\n/g, '</p><p>');
+          html = '<p>' + html + '</p>';
+          
+          // Nettoyer les <p> vides
+          html = html.replace(/<p><\/p>/g, '');
+          html = html.replace(/<p>(<[uh][l123]>)/g, '$1');
+          html = html.replace(/(<\/[uh][l123]>)<\/p>/g, '$1');
+          
+          return html;
+        },
+
+        /* ---- Nouvelles fonctions Phase 1 ---- */
+        
+        // Génération de compte rendu
+        async generateReport(){
+          if(!this.currentProject.report.rawNotes.trim()){
+            this.showToast('Veuillez saisir des notes', 'error');
+            return;
+          }
+          
+          this.isGeneratingReport = true;
+          try {
+            const response = await fetch('/api/generate-report', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                notes: this.currentProject.report.rawNotes,
+                template: this.currentProject.report.template,
+                meta: this.currentProject.report.meta
+              })
+            });
+            
+            if(!response.ok){
+              const err = await response.json();
+              throw new Error(err.error || 'Erreur génération');
+            }
+            
+            const data = await response.json();
+            
+            // Résoudre l'instance Marked (compat global/UMD et versions)
+            const _mk = (window.marked && (window.marked.parse ? window.marked : (window.marked.marked ? window.marked.marked : null))) || null;
+            if(!_mk){
+              throw new Error('Marked non chargé');
+            }
+            // Configurer marked.js (si disponible sur cette version)
+            if(typeof _mk.setOptions === 'function'){
+              _mk.setOptions({
+                gfm: true,
+                breaks: true,
+                headerIds: false,
+                mangle: false
+              });
+            }
+            // Convertir le markdown en HTML avec marked.js
+            const htmlContent = (typeof _mk.parse === 'function') ? _mk.parse(data.report) : _mk(data.report);
+            this.currentProject.report.generated = htmlContent;
+            
+            console.log('✅ HTML généré:', htmlContent.substring(0, 500));
+            
+            this.saveProject();
+            this.showToast('Compte rendu généré', 'success');
+          } catch(e){
+            this.showToast(e.message, 'error');
+          } finally {
+            this.isGeneratingReport = false;
+          }
+        },
+        
+        // Gestion des images
+
+        // ====== Outils d'édition ======
+        focusEditor(){
+          const el = document.getElementById('report-editor');
+          if(el){ el.focus(); }
+        },
+        format(cmd){
+          this.focusEditor();
+          document.execCommand(cmd, false, null);
+          this.saveProject();
+        },
+        setHeading(level){
+          this.focusEditor();
+          document.execCommand('formatBlock', false, 'H'+level);
+          this.saveProject();
+        },
+        clearFormatting(){
+          this.focusEditor();
+          document.execCommand('removeFormat', false, null);
+          this.saveProject();
+        },
+        undo(){
+          this.focusEditor();
+          document.execCommand('undo', false, null);
+        },
+        redo(){
+          this.focusEditor();
+          document.execCommand('redo', false, null);
+        },
+        insertTable(){
+          this.focusEditor();
+          const html = `
+            <table>
+              <thead>
+                <tr>
+                  <th>Action</th>
+                  <th>Responsable</th>
+                  <th>Échéance</th>
+                  <th>Statut</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>—</td><td>—</td><td>—</td><td>—</td>
+                </tr>
+              </tbody>
+            </table>`;
+          document.execCommand('insertHTML', false, html);
+          this.saveProject();
+        },
+        onEditorKeydown(e){
+          if((e.ctrlKey || e.metaKey) && !e.shiftKey && e.key.toLowerCase() === 'z'){
+            e.preventDefault();
+            this.undo();
+          } else if((e.ctrlKey || e.metaKey) && (e.key.toLowerCase() === 'y' || (e.shiftKey && e.key.toLowerCase() === 'z'))){
+            e.preventDefault();
+            this.redo();
+          }
+        },
+        async addImage(event){
+          const files = event.target.files || event.dataTransfer?.files;
+          if(!files || !files.length) return;
+          
+          for(let file of files){
+            if(!file.type.match(/^image\/(jpeg|png)$/)){
+              this.showToast('Format non supporté (JPEG/PNG uniquement)', 'error');
+              continue;
+            }
+            
+            if(file.size > 2 * 1024 * 1024){
+              this.showToast('Image trop lourde (max 2 Mo)', 'error');
+              continue;
+            }
+            
+            if(this.currentProject.images.length >= 10){
+              this.showToast('Maximum 10 images', 'error');
+              break;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              this.currentProject.images.push({
+                id: Date.now() + Math.random(),
+                name: file.name,
+                dataUrl: e.target.result,
+                caption: ''
+              });
+              this.saveProject();
+            };
+            reader.readAsDataURL(file);
+          }
+        },
+        
+        removeImage(id){
+          this.currentProject.images = this.currentProject.images.filter(img => img.id !== id);
+          this.saveProject();
+        },
+        
+        moveImageUp(idx){
+          if(idx > 0){
+            const temp = this.currentProject.images[idx];
+            this.currentProject.images[idx] = this.currentProject.images[idx - 1];
+            this.currentProject.images[idx - 1] = temp;
+            this.saveProject();
+          }
+        },
+        
+        moveImageDown(idx){
+          if(idx < this.currentProject.images.length - 1){
+            const temp = this.currentProject.images[idx];
+            this.currentProject.images[idx] = this.currentProject.images[idx + 1];
+            this.currentProject.images[idx + 1] = temp;
+            this.saveProject();
+          }
+        },
+        
+        // Génération PDF
+        async generatePDF(){
+          if(!this.currentProject.report.generated){
+            this.showToast('Aucun contenu à exporter', 'error');
+            return;
+          }
+          
+          this.isGeneratingPDF = true;
+          try {
+            // DIAGRAMME SUPPRIMÉ - L'utilisateur peut l'exporter manuellement et l'ajouter via Images
+            console.log('📊 Diagramme ignoré - Utilisez la section Images pour ajouter le diagramme');
+            
+            const response = await fetch('/api/generate-pdf', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ project: this.currentProject })
+            });
+            
+            if(!response.ok){
+              const err = await response.json();
+              throw new Error(err.error || 'Erreur génération PDF');
+            }
+            
+            const blob = await response.blob();
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${this.currentProject.pdfConfig.title.replace(/\s+/g, '_')}.pdf`;
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+            
+            this.showToast('PDF téléchargé', 'success');
+          } catch(e){
+            this.showToast(e.message, 'error');
+          } finally {
+            this.isGeneratingPDF = false;
+          }
+        },
+        
+        // Sauvegarde projet
+        saveProject(){
+          try {
+            if(!this.currentProject.id){
+              this.currentProject.id = Date.now();
+              this.currentProject.createdAt = new Date().toISOString();
+            }
+            this.currentProject.updatedAt = new Date().toISOString();
+            
+            // Synchroniser le nom du projet avec le titre PDF
+            if(this.currentProject.pdfConfig.title && this.currentProject.pdfConfig.title !== 'Document'){
+              this.currentProject.name = this.currentProject.pdfConfig.title;
+            }
+            
+            const idx = this.projects.findIndex(p => p.id === this.currentProject.id);
+            if(idx >= 0){
+              this.projects[idx] = JSON.parse(JSON.stringify(this.currentProject));
+            } else {
+              this.projects.unshift(JSON.parse(JSON.stringify(this.currentProject)));
+            }
+            
+            // Limiter à 20 projets
+            if(this.projects.length > 20){
+              this.projects = this.projects.slice(0, 20);
+            }
+            
+            localStorage.setItem('pathway_projects', JSON.stringify(this.projects));
+          } catch(e){
+            console.error('Erreur sauvegarde:', e);
+          }
+        },
+        
+        loadProject(id){
+          const project = this.projects.find(p => p.id === id);
+          if(project){
+            this.currentProject = JSON.parse(JSON.stringify(project));
+            if(this.currentProject.diagram.mermaid){
+              this.mermaidCode = this.currentProject.diagram.mermaid;
+              this.renderMermaid();
+            }
+            
+            // Le contenu du rapport sera chargé automatiquement par x-html
+            
+            this.showToast('Projet chargé', 'success');
+          }
+        },
+        
+        deleteProject(id){
+          if(confirm('Supprimer ce projet ?')){
+            this.projects = this.projects.filter(p => p.id !== id);
+            localStorage.setItem('pathway_projects', JSON.stringify(this.projects));
+            this.showToast('Projet supprimé', 'success');
+          }
+        },
+        
+        clearAllProjects(){
+          if(confirm('⚠️ Voulez-vous vraiment effacer TOUT l\'historique des projets ?\n\nCette action est irréversible.')){
+            this.projects = [];
+            localStorage.setItem('pathway_projects', JSON.stringify(this.projects));
+            this.showToast('Historique effacé', 'success');
+          }
+        },
+        
+        newProject(){
+          this.currentProject = {
+            id: null,
+            name: '',
+            diagram: { mermaid: '', svg: '', include: true, position: 'before_report', title: 'Diagramme' },
+            report: { template: 'client_formel', rawNotes: '', generated: '', meta: { date: '', participants: '' } },
+            images: [],
+            pdfConfig: { 
+              logo: '', title: 'Document', client: '', subtitle: '', 
+              footer: '{page}/{pages} • {projet} • {date}', legal: 'ENOVACOM - Tous droits réservés', 
+              watermark: false, 
+              theme: { font: 'Inter', primary: '#0C4A45', margins: { top: 24, right: 18, bottom: 28, left: 18 } },
+              order: ['report', 'images', 'diagram']  // Diagramme à la fin par défaut
+            }
+          };
+          this.mermaidCode = '';
+          this.renderMermaid();
+        }
       }
     }
   </script>

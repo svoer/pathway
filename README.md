@@ -1,26 +1,60 @@
-# Enovacom Pathway
+# Enovacom Pathway v2
 
-**Application web interne** pour la création de diagrammes professionnels par intelligence artificielle.
+**Application web complète** pour générer des diagrammes Mermaid avec l'IA Mistral, créer des comptes rendus professionnels et exporter en PDF.
 
 > **From idea to diagram in seconds**
 
 ## Présentation
-
 **Enovacom Pathway** est une application web développée en interne pour les collaborateurs Enovacom. Elle permet de générer automatiquement des diagrammes professionnels (Mermaid.js) à partir de descriptions en langage naturel, grâce à l'intelligence artificielle Mistral AI.
 
+## ✨ Nouvelles fonctionnalités v2
+
+### 📝 Comptes rendus professionnels
+- **3 templates IA** : Client formel, Sprint Agile, Brief technique
+- **Éditeur WYSIWYG riche** : Gras, italique, souligné, titres (H1-H6), listes (puces/numérotées), tableaux, liens, code
+- **Génération automatique** : L'IA transforme vos notes en CR structuré
+- **Mise en forme préservée** : Tous les styles sont conservés dans le PDF final
+
+### 🖼️ Gestion d'images
+- **Upload simple** : Glisser-déposer ou cliquer
+- **Légendes** : Ajoutez des descriptions à vos images
+- **Réordonnancement** : Boutons ⬆️ ⬇️ pour changer l'ordre
+- **Formats supportés** : PNG, JPEG, GIF, WebP
+
+### 📄 Export PDF professionnel
+- **En-tête personnalisé** : Logo, titre, client, version
+- **Pied de page** : Mentions légales, pagination
+- **Watermark** : Option "CONFIDENTIEL"
+- **Contenu complet** : Diagramme SVG + CR formaté + Images
+- **Mise en forme complète** :
+  - ✅ Gras, italique, souligné
+  - ✅ Titres avec hiérarchie (H1-H6)
+  - ✅ Listes à puces et numérotées
+  - ✅ Tableaux avec en-têtes colorés
+  - ✅ Blocs de code avec fond gris
+  - ✅ Citations avec bordure
+  - ✅ Sauts de ligne et paragraphes
+  - ✅ Liens cliquables
+- **Diagrammes SVG** : Intégration vectorielle haute qualité (via svglib)
+
+### 📚 Historique des projets
+- **Sauvegarde automatique** : Dans le navigateur (localStorage)
+- **Gestion complète** : Ouvrir, sauvegarder, supprimer
+- **Nom intelligent** : Le nom du projet = titre du PDF
+- **Effacement rapide** : Bouton "Tout effacer" pour nettoyer l'historique
+
 ### Cas d'usage
-- **Architecture technique** : Diagrammes de séquence, diagrammes de classes
-- **Processus métier** : Flowcharts, diagrammes d'états
-- **Gestion de projet** : Gantt, timelines
-- **Documentation** : Diagrammes ER, mindmaps
-- **Présentations clients** : Tous types de diagrammes personnalisables
+- **Réunions clients** : Diagramme + CR + Export PDF
+- **Sprints Agile** : Daily/Review avec CR automatique
+- **Ateliers techniques** : Architecture + Décisions + PDF
+- **Documentation** : Diagrammes + Images + Export professionnel
 
 ### Avantages
-- ✅ **Gain de temps** : Génération instantanée par IA
-- ✅ **Qualité professionnelle** : 30+ thèmes, export haute qualité
-- ✅ **Simplicité** : Pas besoin de connaître la syntaxe Mermaid
-- ✅ **Personnalisation** : Couleurs, polices, styles entièrement configurables
-- ✅ **Sécurité** : Données stockées localement, aucun serveur central
+- ✅ **Tout-en-un** : Diagramme + CR + Images + PDF
+- ✅ **Gain de temps** : Génération IA instantanée
+- ✅ **Qualité pro** : 30+ thèmes, export haute qualité
+- ✅ **Simplicité** : Interface intuitive, pas de formation
+- ✅ **Sécurité** : Données stockées localement
 
 ---
 
@@ -66,7 +100,8 @@ start.bat
 
 **C'est tout !** Le script `start.bat` fait automatiquement :
 - ✅ Création de l'environnement virtuel Python
-- ✅ Installation des dépendances (Flask, requests, python-dotenv)
+- ✅ Installation des dépendances (Flask, ReportLab, svglib, BeautifulSoup4, etc.)
+- ✅ Vérification et installation des bibliothèques manquantes
 - ✅ Lancement de l'application
 - ✅ Ouverture automatique dans votre navigateur
 
@@ -331,16 +366,46 @@ Astuce : pour un rendu cohérent, pars d’un thème puis ajuste seulement la **
 
 ## ⌨️ Raccourcis
 
-* **Ctrl/Cmd + Entrée** : Générer depuis le prompt (si l’API est configurée).
+* **Ctrl/Cmd + Entrée** : Générer depuis le prompt (si l'API est configurée)
 
 ---
 
-## 🗺️ Architecture (très simple)
+## 🗺️ Architecture
 
-* **Frontend** : HTML + Alpine.js + Mermaid v10 + Tailwind (CDN pour dev).
-* **Intégrations** : Web Speech API (dictée FR).
-* **Exports** : SVG direct, PNG/JPEG via Canvas `toBlob`.
-* **Backend (optionnel)** : endpoints REST minces pour parler à l’API Mistral.
+### Frontend
+* **Framework** : HTML + Alpine.js (réactivité)
+* **Diagrammes** : Mermaid v10
+* **Styles** : Tailwind CSS (CDN)
+* **Éditeur** : TinyMCE (WYSIWYG riche)
+* **Intégrations** : Web Speech API (dictée FR)
+* **Exports** : SVG direct, PNG/JPEG via Canvas `toBlob`
+
+### Backend (Flask)
+* **Framework** : Flask 3.0
+* **PDF** : ReportLab 4.4+ (génération PDF)
+* **SVG** : svglib 1.6+ (conversion SVG → PDF)
+* **HTML** : BeautifulSoup4 + lxml (parsing HTML)
+* **API** : Endpoints REST pour Mistral AI
+* **Stockage** : localStorage (navigateur) pour les projets
+
+### Dépendances clés
+```txt
+Flask==3.0.3
+reportlab>=4.4.3
+svglib>=1.6.0
+beautifulsoup4>=4.12.0
+lxml>=6.0.0
+python-dotenv==1.0.1
+requests==2.32.3
+markdown==3.5.2
+```
+
+### Fonctionnalités techniques
+* **Conversion HTML → PDF** : Préservation complète de la mise en forme (gras, italique, listes, tableaux, code)
+* **Intégration SVG** : Conversion vectorielle via svglib pour une qualité optimale
+* **Gestion des styles** : Styles personnalisés ReportLab pour chaque élément HTML
+* **Espacement intelligent** : Gestion automatique des sauts de ligne et paragraphes
+* **Historique persistant** : Sauvegarde automatique dans localStorage avec bouton d'effacement
 
 ## 📄 Licence
 
