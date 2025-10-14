@@ -113,7 +113,7 @@
    - Copiez la clé générée (elle ne sera affichée qu'une seule fois !)
 6. **Conserver votre clé** : Sauvegardez-la dans un endroit sûr
 
-> 💡 **Astuce** : Les 5€ gratuits permettent environ 500 générations de diagrammes. Au-delà, vous pouvez ajouter des crédits selon vos besoins (tarifs très compétitifs).
+> 💡 **Offre gratuite** : Mistral AI offre 1 000 000 de tokens par mois avec la version gratuite, largement suffisant pour un usage professionnel quotidien.
 
 > 🔒 **Sécurité** : Votre clé API est stockée uniquement dans le localStorage de votre navigateur. Elle n'est jamais transmise aux serveurs Enovacom.
 
