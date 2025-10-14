@@ -1,60 +1,90 @@
-# Enovacom Pathway v2
-
-**Application web complète** pour générer des diagrammes Mermaid avec l'IA Mistral, créer des comptes rendus professionnels et exporter en PDF.
+# Enovacom Pathway
 
 > **From idea to diagram in seconds**
 
 ## Présentation
-**Enovacom Pathway** est une application web développée en interne pour les collaborateurs Enovacom. Elle permet de générer automatiquement des diagrammes professionnels (Mermaid.js) à partir de descriptions en langage naturel, grâce à l'intelligence artificielle Mistral AI.
 
-## ✨ Nouvelles fonctionnalités v2
-
-### 📝 Comptes rendus professionnels
-- **3 templates IA** : Client formel, Sprint Agile, Brief technique
-- **Éditeur WYSIWYG riche** : Gras, italique, souligné, titres (H1-H6), listes (puces/numérotées), tableaux, liens, code
-- **Génération automatique** : L'IA transforme vos notes en CR structuré
-- **Mise en forme préservée** : Tous les styles sont conservés dans le PDF final
-
-### 🖼️ Gestion d'images
-- **Upload simple** : Glisser-déposer ou cliquer
-- **Légendes** : Ajoutez des descriptions à vos images
-- **Réordonnancement** : Boutons ⬆️ ⬇️ pour changer l'ordre
-- **Formats supportés** : PNG, JPEG, GIF, WebP
-
-### 📄 Export PDF professionnel
-- **En-tête personnalisé** : Logo, titre, client, version
-- **Pied de page** : Mentions légales, pagination
-- **Watermark** : Option "CONFIDENTIEL"
-- **Contenu complet** : Diagramme SVG + CR formaté + Images
-- **Mise en forme complète** :
-  - ✅ Gras, italique, souligné
-  - ✅ Titres avec hiérarchie (H1-H6)
-  - ✅ Listes à puces et numérotées
-  - ✅ Tableaux avec en-têtes colorés
-  - ✅ Blocs de code avec fond gris
-  - ✅ Citations avec bordure
-  - ✅ Sauts de ligne et paragraphes
-  - ✅ Liens cliquables
-- **Diagrammes SVG** : Intégration vectorielle haute qualité (via svglib)
-
-### 📚 Historique des projets
-- **Sauvegarde automatique** : Dans le navigateur (localStorage)
-- **Gestion complète** : Ouvrir, sauvegarder, supprimer
-- **Nom intelligent** : Le nom du projet = titre du PDF
-- **Effacement rapide** : Bouton "Tout effacer" pour nettoyer l'historique
+**Enovacom Pathway** est une application web professionnelle développée pour les collaborateurs Enovacom. Elle combine génération de diagrammes par IA, rédaction de comptes rendus structurés et export PDF de qualité professionnelle.
 
 ### Cas d'usage
-- **Réunions clients** : Diagramme + CR + Export PDF
-- **Sprints Agile** : Daily/Review avec CR automatique
-- **Ateliers techniques** : Architecture + Décisions + PDF
-- **Documentation** : Diagrammes + Images + Export professionnel
 
-### Avantages
-- ✅ **Tout-en-un** : Diagramme + CR + Images + PDF
-- ✅ **Gain de temps** : Génération IA instantanée
-- ✅ **Qualité pro** : 30+ thèmes, export haute qualité
-- ✅ **Simplicité** : Interface intuitive, pas de formation
-- ✅ **Sécurité** : Données stockées localement
+- **Réunions clients** : Générez un diagramme d'architecture, rédigez le compte rendu et exportez le tout en PDF
+- **Sprints Agile** : Documentez vos daily/review avec des diagrammes de flux et des CR automatiques
+- **Ateliers techniques** : Capturez les décisions d'architecture avec diagrammes et documentation
+- **Documentation projet** : Créez des documents complets avec diagrammes, images et texte structuré
+
+## Fonctionnalités principales
+
+### Génération de diagrammes par IA
+
+- **Génération automatique** : Décrivez votre diagramme en français, l'IA Mistral génère le code Mermaid
+- **Dictée vocale** : Utilisez votre voix pour créer des diagrammes
+- **Édition manuelle** : Modifiez le code Mermaid directement si besoin
+- **10+ types de diagrammes** : Flowchart, Sequence, Class, State, ER, Gantt, Pie, Journey, Timeline, Mindmap, Git Graph
+- **30+ thèmes professionnels** : Palettes de couleurs organisées par catégorie (Pro, Sombres, Bleus, Verts, etc.)
+- **Personnalisation avancée** : Couleurs, polices, tailles configurables
+- **Exports multiples** : SVG (vectoriel), PNG (transparent), JPEG (fond blanc)
+
+### Comptes rendus professionnels
+
+- **3 templates IA spécialisés** :
+  - **Client formel** : Synthèse exécutive, points clés, décisions, actions, prochaines étapes
+  - **Sprint Agile** : Objectifs, user stories, blockers, décisions techniques
+  - **Brief technique** : Contexte, architecture, stack technique, contraintes
+- **Éditeur WYSIWYG complet** : Gras, italique, souligné, titres H1-H6, listes, tableaux, liens, code
+- **Génération automatique** : L'IA structure vos notes brutes en compte rendu professionnel
+- **Édition post-génération** : Modifiez le contenu généré avec l'éditeur riche
+
+### Gestion d'images
+
+- **Upload simple** : Cliquez ou glissez-déposez vos images
+- **Titres personnalisés** : Ajoutez des titres descriptifs à chaque image
+- **Réordonnancement** : Changez l'ordre d'affichage avec les boutons de navigation
+- **Formats supportés** : PNG, JPEG (max 2 Mo par image, 10 images max)
+- **Intégration PDF** : Les images sont automatiquement intégrées dans le PDF final
+
+### Export PDF professionnel
+
+- **En-tête personnalisé** :
+  - Logo (upload ou logo Enovacom par défaut)
+  - Titre du document
+  - Nom du client
+  - Sous-titre / version
+- **Pied de page automatique** :
+  - Mentions légales personnalisables
+  - Numérotation des pages (bas à droite)
+  - Présent sur toutes les pages
+- **Mise en forme préservée** :
+  - Titres hiérarchiques (H1-H6) avec couleurs
+  - Listes à puces et numérotées
+  - Tableaux avec en-têtes colorés et lignes alternées
+  - Gras, italique, souligné, liens cliquables
+  - Blocs de code avec fond gris
+  - Sauts de ligne et paragraphes respectés
+- **Contenu structuré** :
+  - Compte rendu en premier (facilite le copier-coller)
+  - Images avec titres (toujours sur la même page)
+  - Redimensionnement automatique pour éviter les blancs
+- **Options avancées** :
+  - Watermark "CONFIDENTIEL" (optionnel)
+  - Marges personnalisables
+  - Couleur primaire configurable
+
+### Historique et sauvegarde
+
+- **Sauvegarde automatique** : Tous vos projets sont sauvegardés dans le navigateur (localStorage)
+- **Gestion complète** : Créer, ouvrir, renommer, supprimer des projets
+- **Persistance** : Vos données restent disponibles même après fermeture du navigateur
+- **Export/Import** : Possibilité d'exporter et réimporter vos projets
+
+## Avantages
+
+- **Gain de temps** : Génération IA instantanée de diagrammes et comptes rendus
+- **Qualité professionnelle** : Exports PDF haute qualité avec mise en page soignée
+- **Tout-en-un** : Diagrammes + CR + Images + PDF dans une seule application
+- **Simplicité** : Interface intuitive, pas de formation nécessaire
+- **Sécurité** : Données stockées localement, clé API dans le navigateur uniquement
+- **Flexibilité** : Édition manuelle possible à tout moment
 
 ---
 
@@ -372,23 +402,25 @@ Astuce : pour un rendu cohérent, pars d’un thème puis ajuste seulement la **
 
 ## 🗺️ Architecture
 
-### Frontend
-* **Framework** : HTML + Alpine.js (réactivité)
-* **Diagrammes** : Mermaid v10
-* **Styles** : Tailwind CSS (CDN)
-* **Éditeur** : TinyMCE (WYSIWYG riche)
-* **Intégrations** : Web Speech API (dictée FR)
-* **Exports** : SVG direct, PNG/JPEG via Canvas `toBlob`
+### Stack technique
 
-### Backend (Flask)
-* **Framework** : Flask 3.0
-* **PDF** : ReportLab 4.4+ (génération PDF)
-* **SVG** : svglib 1.6+ (conversion SVG → PDF)
-* **HTML** : BeautifulSoup4 + lxml (parsing HTML)
-* **API** : Endpoints REST pour Mistral AI
-* **Stockage** : localStorage (navigateur) pour les projets
+**Frontend**
+- **Framework** : HTML + Alpine.js 3.x (réactivité légère)
+- **Diagrammes** : Mermaid.js v10
+- **Styles** : Tailwind CSS 3.x (CDN)
+- **Éditeur** : ContentEditable natif avec toolbar personnalisée
+- **Intégrations** : Web Speech API (dictée vocale française)
+- **Exports** : SVG direct, PNG/JPEG via Canvas API
 
-### Dépendances clés
+**Backend**
+- **Framework** : Flask 3.0.3
+- **PDF** : ReportLab 4.4+ (génération PDF professionnelle)
+- **SVG** : svglib 1.6+ (conversion SVG → PDF vectoriel)
+- **HTML** : BeautifulSoup4 + lxml (parsing HTML robuste)
+- **API** : Endpoints REST pour Mistral AI
+- **Stockage** : localStorage (navigateur) pour persistance locale
+
+**Dépendances principales**
 ```txt
 Flask==3.0.3
 reportlab>=4.4.3
@@ -400,23 +432,32 @@ requests==2.32.3
 markdown==3.5.2
 ```
 
-### Fonctionnalités techniques
-* **Conversion HTML → PDF** : Préservation complète de la mise en forme (gras, italique, listes, tableaux, code)
-* **Intégration SVG** : Conversion vectorielle via svglib pour une qualité optimale
-* **Gestion des styles** : Styles personnalisés ReportLab pour chaque élément HTML
-* **Espacement intelligent** : Gestion automatique des sauts de ligne et paragraphes
-* **Historique persistant** : Sauvegarde automatique dans localStorage avec bouton d'effacement
+### Fonctionnalités techniques avancées
+
+- **Conversion HTML → PDF** : Parser BeautifulSoup4 préservant gras, italique, listes, tableaux, code, citations
+- **Intégration SVG vectorielle** : Conversion via svglib pour qualité optimale sans perte
+- **Styles ReportLab personnalisés** : Chaque élément HTML (H1-H6, p, ul, ol, table, code) a son style dédié
+- **Espacement intelligent** : Gestion automatique des sauts de ligne, paragraphes et espacements verticaux
+- **KeepTogether** : Les titres d'images restent toujours avec leur image (pas de saut de page entre les deux)
+- **Redimensionnement automatique** : Les images trop grandes sont réduites pour éviter les blancs
+- **Footer sur toutes les pages** : Mentions légales et numérotation via `onFirstPage` et `onLaterPages`
+- **Nettoyage Unicode** : Suppression automatique des caractères problématiques (carrés, espaces invisibles)
+- **Historique persistant** : Sauvegarde automatique dans localStorage avec gestion complète (CRUD)
+
+---
 
 ## 📄 Licence
 
-MIT
+MIT License - Copyright (c) 2025 Enovacom
 
 ---
 
 ## 🙌 Crédits
 
-* [Mermaid](https://mermaid.js.org/) pour le moteur de rendu
-* Merci à toutes les personnes qui aiment les jolis schémas ❤️
+- **[Mermaid.js](https://mermaid.js.org/)** - Moteur de rendu de diagrammes
+- **[Mistral AI](https://mistral.ai/)** - Intelligence artificielle pour génération
+- **[ReportLab](https://www.reportlab.com/)** - Génération PDF professionnelle
+- **[Alpine.js](https://alpinejs.dev/)** - Framework JavaScript léger
+- **[Tailwind CSS](https://tailwindcss.com/)** - Framework CSS utilitaire
 
-```
-```
+Développé avec ❤️ par l'équipe Enovacom
