@@ -1088,7 +1088,7 @@ def generate_pdf():
                                 fontName='Helvetica-Bold',
                                 textColor=primary
                             )
-                            story.append(Paragraph(img_name, image_title_style))
+                            title_paragraph = Paragraph(img_name, image_title_style)
                             
                             # Extraire les données base64
                             img_bytes = base64.b64decode(img_base64.split(',')[1])
@@ -1100,7 +1100,7 @@ def generate_pdf():
                             right_margin = pdf_config.get('theme', {}).get('margins', {}).get('right', 18) * mm
                             available_width = page_width - left_margin - right_margin
                             
-                            # Créer l'image avec une largeur maximale et ratio préservé
+                            # Créer l'image avec gestion intelligente de la taille
                             try:
                                 from reportlab.lib.utils import ImageReader
                                 reader = ImageReader(img_buffer)
@@ -1109,10 +1109,26 @@ def generate_pdf():
                                     # Calculer la hauteur pour préserver le ratio
                                     target_width = float(available_width)
                                     target_height = target_width * (ih / float(iw))
-                                    # Limiter la hauteur maximale à 150mm
-                                    if target_height > 150*mm:
-                                        target_height = 150*mm
+                                    
+                                    # LOGIQUE ANTI-GROS-BLANC:
+                                    # Estimer l'espace disponible sur la page (approximatif)
+                                    # Page A4 = 297mm, marges = ~36mm, titre = ~20mm
+                                    available_page_height = 240*mm  # Espace réaliste disponible
+                                    title_height = 30*mm  # Hauteur approximative du titre + espaces
+                                    max_image_height = available_page_height - title_height
+                                    
+                                    # Si l'image est trop haute, la réduire pour éviter le saut de page
+                                    if target_height > max_image_height:
+                                        print(f"⚠️ Image trop haute ({target_height/mm:.0f}mm), réduction pour éviter saut de page")
+                                        target_height = max_image_height
                                         target_width = target_height * (iw / float(ih))
+                                        print(f"✅ Image réduite à {target_height/mm:.0f}mm de hauteur")
+                                    
+                                    # Limiter aussi à 120mm pour éviter les images géantes
+                                    if target_height > 120*mm:
+                                        target_height = 120*mm
+                                        target_width = target_height * (iw / float(ih))
+                                    
                                     img_buffer.seek(0)
                                     img = RLImage(img_buffer, width=target_width, height=target_height)
                                 else:
@@ -1123,9 +1139,15 @@ def generate_pdf():
                                 img = RLImage(img_buffer, width=available_width)
                             
                             img.hAlign = 'LEFT'
-                            story.append(img)
-                            story.append(Spacer(1, 20))  # Espace après l'image
-                            print(f"✅ Image ajoutée avec GROS titre: {img_name}")
+                            
+                            # GARDER TITRE + IMAGE ENSEMBLE sur la même page
+                            image_block = KeepTogether([
+                                title_paragraph,
+                                img,
+                                Spacer(1, 20)  # Espace après l'image
+                            ])
+                            story.append(image_block)
+                            print(f"✅ Image ajoutée avec GROS titre (KeepTogether): {img_name}")
                     except Exception as e:
                         print(f"❌ Erreur ajout image {img_data.get('name', 'inconnue')}: {e}")
                         # Ajouter quand même le titre même si l'image échoue
@@ -1140,9 +1162,13 @@ def generate_pdf():
                             fontName='Helvetica-Bold',
                             textColor=primary
                         )
-                        story.append(Paragraph(img_name, image_title_style))
-                        story.append(Paragraph(f"[Image non disponible: {img_name}]", normal_style))
-                        story.append(Spacer(1, 20))
+                        # Même en cas d'erreur, garder titre + message ensemble
+                        error_block = KeepTogether([
+                            Paragraph(img_name, image_title_style),
+                            Paragraph(f"[Image non disponible: {img_name}]", normal_style),
+                            Spacer(1, 20)
+                        ])
+                        story.append(error_block)
         
         # Footer et Watermark
         if pdf_config.get('legal'):
