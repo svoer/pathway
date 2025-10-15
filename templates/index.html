@@ -171,8 +171,14 @@
           
           <!-- Notes brutes -->
           <div>
-            <label class="block text-sm font-semibold mb-1">Notes brutes</label>
-            <textarea x-model="currentProject.report.rawNotes" @input="saveProject()" class="neo-input resize-vertical h-32" placeholder="Tapez vos notes ici..."></textarea>
+            <div class="flex items-center justify-between mb-1">
+              <label class="block text-sm font-semibold">Notes brutes</label>
+              <button @click="toggleNoteDictation()" class="neo-btn neo-btn-icon" :class="{'is-recording': isRecordingNotes}" :title="isRecordingNotes ? 'Arrêter la dictée' : 'Dicter les notes'" style="height: 32px; width: 32px;">
+                <span x-show="!isRecordingNotes">🎤</span>
+                <span x-show="isRecordingNotes">⏹️</span>
+              </button>
+            </div>
+            <textarea x-model="currentProject.report.rawNotes" @input="saveProject()" :class="['neo-input resize-vertical h-32', isRecordingNotes ? 'ring-2 ring-rose-500' : '']" :placeholder="(isRecordingNotes ? 'Parlez… la dictée est en cours' : 'Tapez vos notes ici...')"></textarea>
           </div>
           
           <!-- Génération -->
@@ -222,7 +228,8 @@
               contenteditable="true" 
               @input="currentProject.report.generated = $event.target.innerHTML; saveProject()"
               @keydown="onEditorKeydown($event)"
-              x-html="currentProject.report.generated"
+              x-init="$el.innerHTML = currentProject.report.generated"
+              x-effect="if(!document.activeElement || document.activeElement !== $el) { $el.innerHTML = currentProject.report.generated }"
               class="neo-input min-h-[300px] p-4 overflow-auto"
               style="white-space: pre-wrap; line-height: 1.6;"
             ></div>
@@ -290,6 +297,23 @@
       <section class="neo-card">
         <div class="neo-card-header" style="padding: 0.75rem 1rem;"><h2 class="section-title text-base">Générer avec l'IA</h2></div>
         <div class="px-4 pb-4">
+          <!-- Sélecteur de type de diagramme -->
+          <div class="mb-3">
+            <label class="block text-sm font-semibold mb-1">Type de diagramme</label>
+            <select x-model="selectedDiagramType" @change="updatePromptWithType()" class="neo-input neo-select" style="padding: 0.5rem 0.75rem; font-size: 0.85rem;">
+              <option value="">-- Sélectionnez un type (optionnel) --</option>
+              <option value="flowchart">🔄 Flowchart (Organigramme)</option>
+              <option value="sequence">💬 Sequence (Diagramme de séquence)</option>
+              <option value="class">📦 Class (Diagramme de classes)</option>
+              <option value="state">🔀 State (Diagramme d'états)</option>
+              <option value="er">🗄️ ER Diagram (Entité-Relation)</option>
+              <option value="gantt">📅 Gantt (Planning)</option>
+              <option value="pie">🥧 Pie Chart (Graphique circulaire)</option>
+              <option value="gitgraph">🌳 Git Graph</option>
+              <option value="journey">🗺️ Journey (Parcours utilisateur)</option>
+            </select>
+          </div>
+          
           <div class="grid grid-cols-1 lg:grid-cols-12 gap-3">
             <div class="lg:col-span-10">
               <textarea x-model="prompt" :class="['neo-input resize-none h-24 mb-0', isRecording ? 'ring-2 ring-rose-500' : '']" style="font-size: 0.9rem; padding: 0.6rem 0.8rem;" :placeholder="(isRecording ? 'Parlez… la dictée est en cours' : 'Décrivez le diagramme que vous voulez créer...')"></textarea>
@@ -1027,7 +1051,11 @@ GAMME->>DPI: ADT^A01 (Création dossier patient)
         textColor:'#0e1f1c',       // Couleur du texte
         fontFamily:"Poppins, sans-serif",  // Police par défaut : Poppins
         fontSize:16, // Taille par défaut plus lisible
-        isRecording:false, recognition:null,
+        isRecording:false, 
+        isRecordingNotes:false,
+        recognition:null,
+        notesRecognition:null,
+        selectedDiagramType:'',
 
         // Thèmes riches (couleur des boîtes + fond canvas) - Organisés par catégories
         availableThemes:[
@@ -1534,13 +1562,103 @@ GAMME->>DPI: ADT^A01 (Création dossier patient)
         initSpeech(){
           const Rec=window.SpeechRecognition||window.webkitSpeechRecognition;
           if(!Rec) return;
-          this.recognition=new Rec(); this.recognition.continuous=true; this.recognition.interimResults=true; this.recognition.lang='fr-FR';
-          this.recognition.onresult=(e)=>{ for(let i=e.resultIndex;i<e.results.length;i++){ const t=e.results[i][0].transcript; if(e.results[i].isFinal) this.prompt=(this.prompt.trim()?this.prompt+' ':'')+t.trim(); } };
-          this.recognition.onerror=()=>{ this.isRecording=false; }; this.recognition.onend=()=>{ this.isRecording=false; };
+          
+          // Reconnaissance pour le prompt IA
+          this.recognition=new Rec(); 
+          this.recognition.continuous=true; 
+          this.recognition.interimResults=true; 
+          this.recognition.lang='fr-FR';
+          this.recognition.onresult=(e)=>{ 
+            for(let i=e.resultIndex;i<e.results.length;i++){ 
+              const t=e.results[i][0].transcript; 
+              if(e.results[i].isFinal) this.prompt=(this.prompt.trim()?this.prompt+' ':'')+t.trim(); 
+            } 
+          };
+          this.recognition.onerror=()=>{ this.isRecording=false; }; 
+          this.recognition.onend=()=>{ this.isRecording=false; };
+          
+          // Reconnaissance pour les notes de réunion
+          this.notesRecognition=new Rec(); 
+          this.notesRecognition.continuous=true; 
+          this.notesRecognition.interimResults=true; 
+          this.notesRecognition.lang='fr-FR';
+          this.notesRecognition.onresult=(e)=>{ 
+            for(let i=e.resultIndex;i<e.results.length;i++){ 
+              const t=e.results[i][0].transcript; 
+              if(e.results[i].isFinal) {
+                this.currentProject.report.rawNotes=(this.currentProject.report.rawNotes.trim()?this.currentProject.report.rawNotes+' ':'')+t.trim();
+                this.saveProject();
+              }
+            } 
+          };
+          this.notesRecognition.onerror=()=>{ this.isRecordingNotes=false; }; 
+          this.notesRecognition.onend=()=>{ this.isRecordingNotes=false; };
         },
-        toggleDictation(){ if(!this.recognition){ this.showToast('Dictée non supportée','error'); return; } this.isRecording?this.stopDictation():this.startDictation(); },
-        startDictation(){ try{ this.recognition.start(); this.isRecording=true; this.showToast('Dictée démarrée','success'); }catch(e){ this.showToast('Impossible de démarrer la dictée','error'); } },
-        stopDictation(){ try{ this.recognition.stop(); }catch(e){} this.isRecording=false; this.showToast('Dictée arrêtée','success'); },
+        toggleDictation(){ 
+          if(!this.recognition){ this.showToast('Dictée non supportée','error'); return; } 
+          this.isRecording?this.stopDictation():this.startDictation(); 
+        },
+        startDictation(){ 
+          try{ 
+            this.recognition.start(); 
+            this.isRecording=true; 
+            this.showToast('Dictée démarrée','success'); 
+          }catch(e){ 
+            this.showToast('Impossible de démarrer la dictée','error'); 
+          } 
+        },
+        stopDictation(){ 
+          try{ this.recognition.stop(); }catch(e){} 
+          this.isRecording=false; 
+          this.showToast('Dictée arrêtée','success'); 
+        },
+        
+        // Dictée pour les notes de réunion
+        toggleNoteDictation(){ 
+          if(!this.notesRecognition){ this.showToast('Dictée non supportée','error'); return; } 
+          this.isRecordingNotes?this.stopNoteDictation():this.startNoteDictation(); 
+        },
+        startNoteDictation(){ 
+          try{ 
+            this.notesRecognition.start(); 
+            this.isRecordingNotes=true; 
+            this.showToast('Dictée des notes démarrée','success'); 
+          }catch(e){ 
+            this.showToast('Impossible de démarrer la dictée','error'); 
+          } 
+        },
+        stopNoteDictation(){ 
+          try{ this.notesRecognition.stop(); }catch(e){} 
+          this.isRecordingNotes=false; 
+          this.showToast('Dictée des notes arrêtée','success'); 
+        },
+        
+        // Mise à jour du prompt avec le type de diagramme sélectionné
+        updatePromptWithType(){
+          if(!this.selectedDiagramType) return;
+          
+          const typeLabels = {
+            'flowchart': 'Flowchart',
+            'sequence': 'Sequence',
+            'class': 'Class',
+            'state': 'State',
+            'er': 'ER',
+            'gantt': 'Gantt',
+            'pie': 'Pie',
+            'gitgraph': 'GitGraph',
+            'journey': 'Journey'
+          };
+          
+          const typeLabel = typeLabels[this.selectedDiagramType] || this.selectedDiagramType;
+          
+          // Si le prompt est vide ou ne commence pas déjà par un type, ajouter le préfixe
+          if(!this.prompt.trim() || !this.prompt.match(/^(flowchart|sequence|class|state|er|gantt|pie|gitgraph|journey):/i)){
+            this.prompt = typeLabel + ': ' + this.prompt.trim();
+          } else {
+            // Remplacer le type existant
+            this.prompt = this.prompt.replace(/^(flowchart|sequence|class|state|er|gantt|pie|gitgraph|journey):/i, typeLabel + ':');
+          }
+        },
 
         /* ---- Génération ---- */
         async generate(){
