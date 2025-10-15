@@ -196,30 +196,30 @@
             
             <!-- Barre d'outils éditeur -->
             <div class="flex flex-wrap gap-2 mb-2">
-              <button type="button" class="neo-btn" @click="format('bold')"><b>B</b></button>
-              <button type="button" class="neo-btn" @click="format('italic')"><i>I</i></button>
-              <button type="button" class="neo-btn" @click="format('underline')"><u>U</u></button>
-              <button type="button" class="neo-btn" @click="format('strikeThrough')"><s>S</s></button>
+              <button type="button" class="neo-btn" @click.prevent="format('bold')"><b>B</b></button>
+              <button type="button" class="neo-btn" @click.prevent="format('italic')"><i>I</i></button>
+              <button type="button" class="neo-btn" @click.prevent="format('underline')"><u>U</u></button>
+              <button type="button" class="neo-btn" @click.prevent="format('strikeThrough')"><s>S</s></button>
               <div class="h-6 w-px bg-gray-300 mx-1"></div>
-              <button type="button" class="neo-btn" @click="setHeading(1)">H1</button>
-              <button type="button" class="neo-btn" @click="setHeading(2)">H2</button>
-              <button type="button" class="neo-btn" @click="setHeading(3)">H3</button>
-              <button type="button" class="neo-btn" @click="setHeading(4)">H4</button>
-              <button type="button" class="neo-btn" @click="setHeading(5)">H5</button>
-              <button type="button" class="neo-btn" @click="setHeading(6)">H6</button>
+              <button type="button" class="neo-btn" @click.prevent="setHeading(1)">H1</button>
+              <button type="button" class="neo-btn" @click.prevent="setHeading(2)">H2</button>
+              <button type="button" class="neo-btn" @click.prevent="setHeading(3)">H3</button>
+              <button type="button" class="neo-btn" @click.prevent="setHeading(4)">H4</button>
+              <button type="button" class="neo-btn" @click.prevent="setHeading(5)">H5</button>
+              <button type="button" class="neo-btn" @click.prevent="setHeading(6)">H6</button>
               <div class="h-6 w-px bg-gray-300 mx-1"></div>
-              <button type="button" class="neo-btn" @click="format('insertUnorderedList')">• Liste</button>
-              <button type="button" class="neo-btn" @click="format('insertOrderedList')">1. Liste</button>
+              <button type="button" class="neo-btn" @click.prevent="format('insertUnorderedList')">• Liste</button>
+              <button type="button" class="neo-btn" @click.prevent="format('insertOrderedList')">1. Liste</button>
               <div class="h-6 w-px bg-gray-300 mx-1"></div>
-              <button type="button" class="neo-btn" @click="format('justifyLeft')">↤</button>
-              <button type="button" class="neo-btn" @click="format('justifyCenter')">↔</button>
-              <button type="button" class="neo-btn" @click="format('justifyRight')">↦</button>
+              <button type="button" class="neo-btn" @click.prevent="format('justifyLeft')">↤</button>
+              <button type="button" class="neo-btn" @click.prevent="format('justifyCenter')">↔</button>
+              <button type="button" class="neo-btn" @click.prevent="format('justifyRight')">↦</button>
               <div class="h-6 w-px bg-gray-300 mx-1"></div>
-              <button type="button" class="neo-btn" @click="undo()">↶ Annuler</button>
-              <button type="button" class="neo-btn" @click="redo()">↷ Rétablir</button>
+              <button type="button" class="neo-btn" @click.prevent="undo()">↶ Annuler</button>
+              <button type="button" class="neo-btn" @click.prevent="redo()">↷ Rétablir</button>
               <div class="h-6 w-px bg-gray-300 mx-1"></div>
-              <button type="button" class="neo-btn" @click="insertTable()">↹ Tableau</button>
-              <button type="button" class="neo-btn" @click="clearFormatting()">Effacer formatage</button>
+              <button type="button" class="neo-btn" @click.prevent="insertTable()">↹ Tableau</button>
+              <button type="button" class="neo-btn" @click.prevent="clearFormatting()">Effacer formatage</button>
             </div>
 
             <!-- Éditeur simple contenteditable avec styles CSS inline pour les tableaux -->
@@ -747,6 +747,98 @@
         <button @click="showHelp = false" class="neo-btn neo-btn-icon bg-white/20 hover:bg-white/30 text-white border-white/30" title="Fermer"><svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg></button>
       </div>
       <div class="p-8 space-y-8 text-sm text-gray-800">
+
+  <!-- Configuration Mistral AI -->
+  <section class="space-y-3">
+    <h3 class="text-2xl font-bold text-primary">Configuration Mistral AI (Gratuit)</h3>
+    <p class="text-base">Pour utiliser l'IA de génération de diagrammes, vous devez configurer votre compte Mistral AI. C'est <strong>gratuit</strong> et prend moins de 5 minutes !</p>
+    
+    <div class="bg-gradient-to-r from-purple-50 to-blue-50 border-2 border-purple-300 rounded-xl p-5 mt-4">
+      <h4 class="font-bold text-lg mb-3 text-purple-900">Étapes de configuration</h4>
+      
+      <div class="space-y-4">
+        <!-- Étape 1 -->
+        <div class="bg-white rounded-lg p-4 border border-purple-200">
+          <div class="flex items-start gap-3">
+            <div class="flex-shrink-0 w-8 h-8 bg-purple-600 text-white rounded-full flex items-center justify-center font-bold">1</div>
+            <div class="flex-1">
+              <h5 class="font-bold text-base mb-2">Créer un compte Mistral AI</h5>
+              <p class="mb-2">Rendez-vous sur la plateforme Mistral AI et créez un compte gratuit :</p>
+              <a href="https://console.mistral.ai" target="_blank" class="inline-flex items-center gap-2 px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 transition-colors font-semibold">
+                Ouvrir console.mistral.ai
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path></svg>
+              </a>
+              <p class="text-xs text-gray-600 mt-2">Astuce : Utilisez votre email professionnel ou personnel</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Étape 2 -->
+        <div class="bg-white rounded-lg p-4 border border-purple-200">
+          <div class="flex items-start gap-3">
+            <div class="flex-shrink-0 w-8 h-8 bg-purple-600 text-white rounded-full flex items-center justify-center font-bold">2</div>
+            <div class="flex-1">
+              <h5 class="font-bold text-base mb-2">Générer une clé API</h5>
+              <ol class="list-disc pl-5 space-y-1 mb-2">
+                <li>Une fois connecté, allez dans <strong>"API Keys"</strong> dans le menu</li>
+                <li>Cliquez sur <strong>"Create new key"</strong></li>
+                <li>Donnez un nom à votre clé (ex: "Pathway")</li>
+                <li>Copiez la clé générée (elle commence par <code class="bg-gray-100 px-2 py-1 rounded">sk-...</code>)</li>
+              </ol>
+              <div class="bg-yellow-50 border border-yellow-300 rounded p-3 mt-2">
+                <p class="text-sm"><strong>Important :</strong> Copiez et sauvegardez votre clé immédiatement, elle ne sera plus visible après !</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Étape 3 -->
+        <div class="bg-white rounded-lg p-4 border border-purple-200">
+          <div class="flex items-start gap-3">
+            <div class="flex-shrink-0 w-8 h-8 bg-purple-600 text-white rounded-full flex items-center justify-center font-bold">3</div>
+            <div class="flex-1">
+              <h5 class="font-bold text-base mb-2">Configurer dans Pathway</h5>
+              <ol class="list-disc pl-5 space-y-1 mb-2">
+                <li>Cliquez sur le bouton <strong>"Paramètres"</strong> en haut à droite de Pathway</li>
+                <li>Collez votre clé API dans le champ <strong>"API Key"</strong></li>
+                <li>Laissez l'URL par défaut : <code class="bg-gray-100 px-2 py-1 rounded">https://api.mistral.ai</code></li>
+                <li>Cliquez sur <strong>"Tester"</strong> pour vérifier la connexion</li>
+                <li>Si le test réussit, cliquez sur <strong>"Sauvegarder"</strong></li>
+              </ol>
+            </div>
+          </div>
+        </div>
+
+        <!-- Étape 4 -->
+        <div class="bg-white rounded-lg p-4 border border-green-200">
+          <div class="flex items-start gap-3">
+            <div class="flex-shrink-0 w-8 h-8 bg-green-600 text-white rounded-full flex items-center justify-center font-bold">✓</div>
+            <div class="flex-1">
+              <h5 class="font-bold text-base mb-2 text-green-900">C'est prêt !</h5>
+              <p>Vous pouvez maintenant utiliser l'IA pour générer des diagrammes automatiquement.</p>
+              <p class="mt-2 text-sm text-gray-600">Les modèles disponibles s'afficheront dans le sélecteur en haut de la page.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Liens utiles -->
+    <div class="bg-gray-50 border border-gray-300 rounded-lg p-4 mt-4">
+      <h5 class="font-bold text-base mb-3">Liens utiles</h5>
+      <div class="space-y-2">
+        <a href="https://console.mistral.ai" target="_blank" class="block text-blue-600 hover:text-blue-800 hover:underline">
+          → Console Mistral AI (création de compte et clés API)
+        </a>
+        <a href="https://docs.mistral.ai" target="_blank" class="block text-blue-600 hover:text-blue-800 hover:underline">
+          → Documentation Mistral AI
+        </a>
+        <a href="https://mistral.ai/pricing" target="_blank" class="block text-blue-600 hover:text-blue-800 hover:underline">
+          → Tarifs et offres Mistral AI
+        </a>
+      </div>
+    </div>
+  </section>
 
   <!-- Démarrage rapide -->
   <section class="space-y-3">
@@ -2172,27 +2264,52 @@ GAMME->>DPI: ADT^A01 (Création dossier patient)
           if(el){ el.focus(); }
         },
         format(cmd){
-          this.focusEditor();
-          document.execCommand(cmd, false, null);
-          this.saveProject();
+          const el = document.getElementById('report-editor');
+          if(el){ 
+            el.focus();
+            // Petit délai pour s'assurer que le focus est bien établi
+            setTimeout(() => {
+              document.execCommand(cmd, false, null);
+              this.currentProject.report.generated = el.innerHTML;
+              this.saveProject();
+            }, 10);
+          }
         },
         setHeading(level){
-          this.focusEditor();
-          document.execCommand('formatBlock', false, 'H'+level);
-          this.saveProject();
+          const el = document.getElementById('report-editor');
+          if(el){ 
+            el.focus();
+            setTimeout(() => {
+              document.execCommand('formatBlock', false, 'H'+level);
+              this.currentProject.report.generated = el.innerHTML;
+              this.saveProject();
+            }, 10);
+          }
         },
         clearFormatting(){
-          this.focusEditor();
-          document.execCommand('removeFormat', false, null);
-          this.saveProject();
+          const el = document.getElementById('report-editor');
+          if(el){ 
+            el.focus();
+            setTimeout(() => {
+              document.execCommand('removeFormat', false, null);
+              this.currentProject.report.generated = el.innerHTML;
+              this.saveProject();
+            }, 10);
+          }
         },
         undo(){
-          this.focusEditor();
-          document.execCommand('undo', false, null);
+          const el = document.getElementById('report-editor');
+          if(el){ 
+            el.focus();
+            document.execCommand('undo', false, null);
+          }
         },
         redo(){
-          this.focusEditor();
-          document.execCommand('redo', false, null);
+          const el = document.getElementById('report-editor');
+          if(el){ 
+            el.focus();
+            document.execCommand('redo', false, null);
+          }
         },
         insertTable(){
           this.focusEditor();

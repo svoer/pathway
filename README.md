@@ -121,7 +121,7 @@
 
 ```bash
 # 1. Cloner le repository
-git clone https://github.com/enovacom/pathway.git
+git clone https://github.com/svoer/pathway.git
 cd pathway
 
 # 2. Double-cliquer sur start.bat (ou lancer en ligne de commande)
