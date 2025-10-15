@@ -143,7 +143,7 @@ L'application s'ouvre sur `http://127.0.0.1:5173`
 
 ```bash
 # Cloner le repository
-git clone https://github.com/enovacom/pathway.git
+git clone https://github.com/svoer/pathway.git
 cd pathway
 
 # Lancer le script d'installation
